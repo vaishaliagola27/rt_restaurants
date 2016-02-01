@@ -505,10 +505,10 @@ function rt_restaurant_add_css_js() {
     // Enqueuing styles 
     wp_enqueue_style("restaurants_css", $template_directory_uri . '/assets/css/restaurant.css');
     wp_enqueue_style("Slick_css", $template_directory_uri . 'lib/slick/slick/slick.css');
-    wp_enqueue_style("Slick_theme_css", $template_directory_uri . 'lib/slick/slick-theme.css');
+    wp_enqueue_style("Slick_theme_css", $template_directory_uri . 'lib/slick/slick/slick-theme.css');
 
     // Registering slick script
-    wp_register_script('slick-js1', $template_directory_uri . '/lib/slick/slick.min.js');
+    wp_register_script('slick-js1', $template_directory_uri . 'lib/slick/slick/slick.min.js');
     wp_enqueue_script('slick-js1');
 
 //    wp_register_script('jquery-migrate-js', $template_directory_uri . '/js/jquery-migrate-1.2.1.min.js');
