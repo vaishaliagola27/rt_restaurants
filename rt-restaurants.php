@@ -11,8 +11,16 @@ License URI: https://www.gnu.org/licenses/gpl-2.0.html
 Domain Path: /languages
 Text Domain: rt-restaurants
 */
-
 // Custom code starts here
+
+register_activation_hook( __FILE__, 'rt_restaurants_flush_rewrites' );
+
+/**
+ * To flush the rewrite rules for plugin.
+ */
+function rt_restaurants_flush_rewrites(){
+    flush_rewrite_rules();
+}
 
 add_action('init', 'rt_restaurant_create_post_type');
 
@@ -488,25 +496,26 @@ add_action('wp_enqueue_scripts', 'rt_restaurant_add_css_js');
  * @var string  $template_directory_uri stores current template directory uri
  */
 function rt_restaurant_add_css_js() {
-    $template_directory_uri = get_template_directory_uri() ;
+    $template_directory_uri = plugin_dir_url( __FILE__ ) ;
+    
     
     wp_enqueue_script('jquery');
     wp_localize_script('jquery', 'ajax_object', admin_url('admin-ajax.php'));
 
     // Enqueuing styles 
-    wp_enqueue_style("restaurants_css", $template_directory_uri . '/restaurant.css');
-    wp_enqueue_style("Slick_css", $template_directory_uri . '/slick/slick.css');
-    wp_enqueue_style("Slick_theme_css", $template_directory_uri . '/slick/slick-theme.css');
+    wp_enqueue_style("restaurants_css", $template_directory_uri . '/assets/css/restaurant.css');
+    wp_enqueue_style("Slick_css", $template_directory_uri . 'lib/slick/slick/slick.css');
+    wp_enqueue_style("Slick_theme_css", $template_directory_uri . 'lib/slick/slick-theme.css');
 
     // Registering slick script
-    wp_register_script('slick-js1', $template_directory_uri . '/slick/slick.min.js');
+    wp_register_script('slick-js1', $template_directory_uri . '/lib/slick/slick.min.js');
     wp_enqueue_script('slick-js1');
 
-    wp_register_script('jquery-migrate-js', $template_directory_uri . '/js/jquery-migrate-1.2.1.min.js');
-    wp_enqueue_script('jquery-migrate-js');
+//    wp_register_script('jquery-migrate-js', $template_directory_uri . '/js/jquery-migrate-1.2.1.min.js');
+//    wp_enqueue_script('jquery-migrate-js');
  
     // Registering restaurant js
-    wp_register_script('slider-js', $template_directory_uri . '/js/restaurants.js');
+    wp_register_script('slider-js', $template_directory_uri . '/assets/js/restaurants.js');
     wp_enqueue_script('slider-js');
 }
 
