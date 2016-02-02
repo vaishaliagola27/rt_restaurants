@@ -32,7 +32,7 @@ if (!class_exists('Theme')) {
             //action for archive page content
             add_action('get_template_part_templates/content', array($this , 'load_archive_content'));
 
-            //
+            //custom template for comments
             add_action('comments_template' , array($this , 'review_template'));
         }
 
@@ -234,6 +234,9 @@ if (!class_exists('Theme')) {
          * loads template 
          * 
          * @param array $template array of file paths
+         * 
+         * @var array   $path           array of file path chunks
+         * @var array   $path_template  path for archive file
          */
         public function load_template($template) {
             if (is_singular('restaurants')) {
@@ -252,6 +255,9 @@ if (!class_exists('Theme')) {
          * loads archive page of template restaurants
          * 
          * @param array $template  array of file paths
+         * 
+         * @var array   $path           array of file path chunks
+         * @var array   $path_template  path for archive file
          */
         public function load_archive_restaurants($template) {
             if(is_post_type_archive('restaurants')) {
@@ -269,8 +275,9 @@ if (!class_exists('Theme')) {
         
         /**
          * Content display of custom post type
-         * @param type $slug
-         * @param type $name
+         * 
+         * @var string  $slug   path of file
+         * @var string  $name   name of post type
          */
         public function load_archive_content() {
             $slug = plugin_dir_path(__FILE__) . 'templates/content';
@@ -279,8 +286,11 @@ if (!class_exists('Theme')) {
         }
         
         /**
+         * add custom template for comment
          * 
          * @param string $theme_template
+         * 
+         * @var string  $path   path for comment template file
          */
         public function review_template($theme_template){
             $path = plugin_dir_path(__FILE__) . 'templates/comments-restaurants.php';

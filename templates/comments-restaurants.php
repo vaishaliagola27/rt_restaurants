@@ -1,15 +1,4 @@
 <?php
-/**
- * The template for displaying comments.
- *
- * This is the template that displays the area of the page that contains both the current comments
- * and the comment form.
- *
- * @link https://codex.wordpress.org/Template_Hierarchy
- *
- * @package _s
- */
-
 /*
  * If the current post is protected by a password and
  * the visitor has not yet entered the password we will
@@ -50,6 +39,7 @@ if ( post_password_required() ) {
 
 		<ol class="comment-list">
 			<?php
+                            //load comment template
                                 $args = array(
                                   'callback' => array("Theme" ,'reviews_html'),
                                   'type' => 'comment'  
