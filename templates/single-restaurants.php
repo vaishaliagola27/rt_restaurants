@@ -20,7 +20,8 @@ get_header(); ?>
 					 * use this in a child theme, then include a file called called content-___.php
 					 * (where ___ is the post format) and that will be used instead.
 					 */
-					get_template_part( 'template-parts/content', get_post_type() );
+                                         global $post;
+					get_template_part( 'templates/content', $post->post_type );
 
 					// Previous/next post navigation.
 					the_post_navigation();

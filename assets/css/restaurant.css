@@ -9,10 +9,9 @@ and open the template in the editor.
 */
 
 
-
 /* main content of restaurant page css*/
 .main-content{
-  width: 80%;
+  width:100%;
   margin:0 10% 0 10%;
   height: auto;
 /*   border:solid aqua 2px; */

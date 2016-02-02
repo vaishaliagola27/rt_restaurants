@@ -23,6 +23,16 @@ if (!class_exists('Theme')) {
             add_action('comment_form_logged_in_after', array($this, 'additional_fields'));
             add_action('comment_form_after_fields', array($this, 'additional_fields'));
             
+            // add template and call load-template
+            add_filter( 'template_include',array($this , 'load_template'));
+            
+            //template for archive page
+            add_filter('template_include' , array($this , 'load_archive_restaurants'));
+            
+            //action for archive page content
+            add_action('get_template_part_templates/content', array($this , 'load_archive_content'));
+
+            
         }
 
         /**
@@ -218,7 +228,54 @@ if (!class_exists('Theme')) {
             $ob_review_all = apply_filters('rt_restaurant_review_display', $ob_review_all);
             echo $ob_review_all;
         }
+        
+        /**
+         * loads template 
+         * 
+         * @param array $template array of file paths
+         */
+        public function load_template($template) {
+            if (is_singular('restaurants')) {
+                $path = explode("/", $template);
+                $path = array_reverse($path);
+                if (strcmp($path[0], "single.php") === 0) {
+                    $path_template = plugin_dir_path(__FILE__) . 'templates/single-restaurants.php';
+                    include_once $path_template;
+                    $template = array( $path_template);
+                }  
+            }
+            return $template;
+        }
 
+        /**
+         * loads archive page of template restaurants
+         * 
+         * @param array $template  array of file paths
+         */
+        public function load_archive_restaurants($template) {
+            if(is_post_type_archive('restaurants')) {
+                $path = explode("/", $template);
+                $path = array_reverse($path);
+                
+                if(strcmp($path[0], "archive.php") === 0) {
+                    $path_template = plugin_dir_path(__FILE__) . 'templates/archive-restaurants.php';
+                    include_once $path_template;
+                    $template =  array($path_template); 
+                }
+            }
+            return $template;
+        }
+        
+        /**
+         * Content display of custom post type
+         * @param type $slug
+         * @param type $name
+         */
+        public function load_archive_content() {
+            $slug = plugin_dir_path(__FILE__) . 'templates/content';
+            $name = 'restaurants';
+            load_template( $slug . '-' . $name .'.php', true );
+        }
     }
 
 }

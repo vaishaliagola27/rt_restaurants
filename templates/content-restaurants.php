@@ -8,7 +8,7 @@ if (is_singular('restaurants')) {
     global $post;
 ?>
 <article class="main-content" itemscope itemtype="http://schema.org/Restaurant">
-    <header>
+    <header class="entry-header"> 
         <!-- Display Restaurant title -->
         <div id="restaurant-title"><?php echo get_post($post->ID)->post_title ?></div>
         
