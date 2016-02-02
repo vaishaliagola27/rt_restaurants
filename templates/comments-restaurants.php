@@ -54,7 +54,10 @@ if ( post_password_required() ) {
 					'style'      => 'ol',
 					'short_ping' => true,
 				) );*/
+                                global $post ,$wp_query;
+                                echo "hello ";
                                 wp_list_comments('type=comment&callback=rt_restaurants_reviews_html');
+                                var_dump($wp_query);
 			?>
 		</ol><!-- .comment-list -->
 

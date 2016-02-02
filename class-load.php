@@ -1,37 +1,46 @@
 <?php
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
-
 if (!class_exists('Load')) {
 
     /**
-     * Description of class-load
-     *
-     * @author rtcamp
+     *  This class will load files and data at theme and plugin loading time.
+     * 
+     * @author Vaishali Agola <vaishaliagola27@gmail.com>
      */
     class Load {
 
-        //put your code here
+        /**
+         * initialize hooks and other classes' method called
+         */
         public function init() {
+            //action for register post types
             add_action('init', array($this, 'register_post_type'));
 
+            //action for register taxomoies
             add_action('init', array($this, 'register_taxonomy'));
             
+            // create other classes' objects and call init() 
             $class_names = array('theme', 'admin');
             
+            /**
+             * Filter for initilize class objects and call init().
+             *
+             * Description.
+             *  This filter will allow user to change classes names for creating objects and call init().
+             * 
+             * @since Unknown
+             *
+             * @param string $var           Description. Name of filter
+             * @param array $class_names    Description. array to store classes name
+             */
             $class_names = apply_filters('wp_hrt_class_loader', $class_names);
             
             foreach( $class_names as $class){
-                
+                //capitalize first letter of class name
                 $class_uc = ucfirst($class);
                 
+                //create class object and call init() of every class
                 ${$class} = new $class_uc();
-                
                 ${$class}->init();
                 
             }

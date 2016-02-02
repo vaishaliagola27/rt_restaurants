@@ -1,43 +1,47 @@
 <?php
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
-
 
 if (!class_exists('Admin')) {
 
     /**
-     * Description of class-admin
-     *
-     * @author rtcamp
+     *  This class will allow change in front-end/Admin side.
+     * 
+     * @author Vaishali Agola <vaishaliagola27@gmail.com>
      */
     class Admin {
 
+        /**
+         * initialize hooks
+         */
         public function init() {
+            //add and save meta box of address
             add_action('add_meta_boxes', array($this, 'add_address'));
             add_action('save_post', array($this, 'save_address'));
 
+            //add and save contact number meta box value
             add_action('add_meta_boxes', array($this, 'add_contactno'));
             add_action('save_post', array($this, 'save_contactno'));
 
+            //add and save timing meta box 
             add_action('add_meta_boxes', array($this, 'add_timing'));
             add_action('save_post', array($this, 'save_timing'));
 
+            //add comment/review default fields
             add_filter('comment_form_default_fields', array($this, 'custom_fields'));
 
+            //action to store review meta data
             add_action('comment_post', array($this, 'save_comment_meta_data'));
 
+            //filter added for verify review details
             add_filter('preprocess_comment', array($this, 'verify_comment_meta_data'));
 
+            //action which extends review meta box for rating
             add_action('add_meta_boxes_comment', array($this, 'extend_comment_add_meta_box'));
 
+            //action for edit meta fields
             add_action('edit_comment', array($this, 'extend_comment_edit_metafields'));
 
             /**
-             * photo gallery code
+             * photo gallery code for thumbnails
              */
             add_theme_support('post-thumbnails', array('restaurants'));
             set_post_thumbnail_size(50, 50);

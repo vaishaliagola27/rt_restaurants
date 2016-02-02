@@ -1,25 +1,25 @@
 <?php
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 
 if (!class_exists('Theme')) {
 
     /**
-     * Description of class-theme
-     *
-     * @author rtcamp
+     *  This class will make changes into front-end side display.
+     * 
+     * @author Vaishali Agola <vaishaliagola27@gmail.com>
      */
     class Theme {
 
-        //put your code here
+        /**
+         * initialize hooks
+         */
         public function init() {
+            //enqueue all scripts and styles for restaurant
             add_action('wp_enqueue_scripts', array($this, 'add_css_js'));
 
+            // to change comment form default fields
             add_filter('comment_form_defaults', array($this, 'default_fields'));
 
+            // additional fields of comment for logged in and other users
             add_action('comment_form_logged_in_after', array($this, 'additional_fields'));
             add_action('comment_form_after_fields', array($this, 'additional_fields'));
             
