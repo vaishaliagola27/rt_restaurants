@@ -154,13 +154,16 @@ and open the template in the editor.
 
 
 /* review area css */
-.comments-area{
-  width: 80%;
+
+#comments{
+  margin-left:10%;
+}
+
+.comments-area {
+  width: 130%;
   margin:0 10% 0 10%;
   background-color: rgba(43,198,212,0.1);
   border: solid #125F67 1px;
-  
-  border-top: none;
 }
 .comments-title{
   font-size: 20px;
@@ -182,6 +185,7 @@ and open the template in the editor.
 .comment-body{
   display:block;
   width: 35%;
+  margin-left:10%;
 }
 
 .comment-body >.comment-author{

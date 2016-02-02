@@ -197,9 +197,10 @@ if (!class_exists('Theme')) {
                 <?php
                 // fetching rating value for review
                 $commentrating = get_comment_meta(get_comment_ID(), 'rating', true);
+                $star_url = plugin_dir_url(__FILE__). 'assets/images/';
                 ?>
                 <p class="comment-rating" itemprop="reviewRating" itemscope itemtype="http://schema.org/Rating">
-                    <img src="<?php echo get_template_directory_uri() . '/star/' . $commentrating . 'star.png'; ?>" />
+                    <img src="<?php echo $star_url  . $commentrating . 'star.png'; ?>" />
                     <br/>
                     Rating: 
                     <strong itemprop="ratingValue">

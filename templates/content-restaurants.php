@@ -17,7 +17,8 @@ if (is_singular('restaurants')) {
             <?php
                 $rating=get_post_meta($post->ID, '_restaurant_ratting',true);
                 if(!empty($rating) || $rating != NULL){
-                    echo "<img src=\"".get_template_directory_uri() . "/star/" . intval($rating) . "star.png\" />";
+                    $star_url = plugin_dir_url(__FILE__). 'assets/images/';
+                    echo "<img src=\"".$star_url . intval($rating) . "star.png\" />";
                 }
             ?>
         </div>
