@@ -29,16 +29,3 @@ require_once 'class-admin.php';
 
 $load_data = new Load();
 $load_data->init();
-
-/**
- * Summary. call Theme class function reviews_html 
- *
- * @since Unknown
- * 
- * @param array $review Description. Array of comments
- * @param string $args
- * @param int $depth
- */
-function rt_restaurants_reviews_html($review, $args, $depth) {
-    Theme::reviews_html($review, $args, $depth);
-}

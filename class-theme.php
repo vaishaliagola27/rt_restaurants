@@ -32,7 +32,8 @@ if (!class_exists('Theme')) {
             //action for archive page content
             add_action('get_template_part_templates/content', array($this , 'load_archive_content'));
 
-            
+            //
+            add_action('comments_template' , array($this , 'review_template'));
         }
 
         /**
@@ -120,7 +121,7 @@ if (!class_exists('Theme')) {
             for ($i = 1; $i <= 5; $i++)
                 echo '<span class="commentrating"><input type="radio" name="rating" id="rating" value="' . $i . '"/> ' . $i . '</span>';
 
-            echo'</span> \n </p>';
+            echo'</span>  </p>';
 
             // Storing output buffer value into variable and clean it.
             $ob_rating = ob_get_clean();
@@ -156,7 +157,7 @@ if (!class_exists('Theme')) {
          * @var int     $commentrating  rating for review
          * @var string  $ob_review_all  output buffer value
          */
-        public function reviews_html($review, $args, $depth) {
+        public static function reviews_html($review, $args, $depth) {
             // Output buffer starts
             ob_start();
 
@@ -275,6 +276,15 @@ if (!class_exists('Theme')) {
             $slug = plugin_dir_path(__FILE__) . 'templates/content';
             $name = 'restaurants';
             load_template( $slug . '-' . $name .'.php', true );
+        }
+        
+        /**
+         * 
+         * @param string $theme_template
+         */
+        public function review_template($theme_template){
+            $path = plugin_dir_path(__FILE__) . 'templates/comments-restaurants.php';
+            return $path;
         }
     }
 
