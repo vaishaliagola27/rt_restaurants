@@ -65,6 +65,7 @@ and open the template in the editor.
   display: inline;
   position: relative;
   width: 45%;
+  margin-left: 1%;
 }
 .main-content >.content .content-left .right{
   width: 50%;
@@ -87,26 +88,25 @@ and open the template in the editor.
 }
 
 .main-content > .content .content-left .left .food-type ul{
-  margin-left: 0px;
+  margin-left: 20px;
   font-size: 14px;
 }
 
 
 .main-content > .content .content-left .right #map{
   margin-top: 5%;
-  height: 350px;
+  height: 300px;
   clear: both; 
 }
 
 .main-content >.content .content-left .right .timing_table{
   border:none;
-  width: 90%;
+  width: 100%;
   font-size: 12px;
 }
 
 .timing_table tr td{
   border:none;
-  padding: -1px -10px 0px 0px;
   margin: auto;
   
 }
@@ -286,3 +286,19 @@ and open the template in the editor.
   border-radius: 7px;
 }
 
+/* Archive page css */
+
+.archive-header h1.archive-title{
+  color: #128791; 
+}
+
+.archive-content{
+  margin-left:5%;
+}
+.archive-content h2.archive-restaurant-title a{
+  color:#1194A0;
+}
+
+.archive-edit-link{
+  
+}

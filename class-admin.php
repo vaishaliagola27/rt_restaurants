@@ -1,5 +1,6 @@
 <?php
 
+namespace rtCamp\WP\rtRestaurants;
 if (!class_exists('Admin')) {
 
     /**

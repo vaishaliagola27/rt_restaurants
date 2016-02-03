@@ -1,5 +1,6 @@
 <?php
 
+namespace rtCamp\WP\rtRestaurants;
 if (!class_exists('Load')) {
 
     /**
@@ -40,7 +41,9 @@ if (!class_exists('Load')) {
                 $class_uc = ucfirst($class);
                 
                 //create class object and call init() of every class
-                ${$class} = new $class_uc();
+		
+		$class_name = "rtCamp\WP\\rtRestaurants\\".$class_uc;
+		${$class} = new $class_name();
                 ${$class}->init();
                 
             }

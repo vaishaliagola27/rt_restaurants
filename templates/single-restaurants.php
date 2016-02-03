@@ -10,8 +10,7 @@ get_header();
         while (have_posts()) : the_post();
         
             //load content of restaurant
-            global $post;
-            get_template_part('templates/content', $post->post_type);
+            include_once \rtCamp\WP\rtRestaurants\PATH . "/templates/template-parts/content-restaurants.php";
 
             // Previous/next post navigation.
             the_post_navigation();

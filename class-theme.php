@@ -1,5 +1,6 @@
 <?php
 
+namespace rtCamp\WP\rtRestaurants;
 if (!class_exists('Theme')) {
 
     /**
@@ -29,11 +30,6 @@ if (!class_exists('Theme')) {
             //template for archive page
             add_filter('template_include' , array($this , 'load_archive_restaurants'));
             
-            //action for archive page content
-            add_action('get_template_part_templates/content', array($this , 'load_archive_content'));
-
-            //custom template for comments
-            add_action('comments_template' , array($this , 'review_template'));
         }
 
         /**
@@ -62,8 +58,7 @@ if (!class_exists('Theme')) {
             //register script for google map
             wp_register_script('google-map', "http://maps.googleapis.com/maps/api/js?sensor=false");
             wp_enqueue_script('google-map');
-//    wp_register_script('jquery-migrate-js', $template_directory_uri . '/js/jquery-migrate-1.2.1.min.js');
-//    wp_enqueue_script('jquery-migrate-js');
+
             // Registering restaurant js
             wp_register_script('slider-js', $template_directory_uri . '/assets/js/restaurants.js');
             wp_enqueue_script('slider-js');
@@ -245,8 +240,7 @@ if (!class_exists('Theme')) {
                 $path = array_reverse($path);
                 if (strcmp($path[0], "single.php") === 0) {
                     $path_template = plugin_dir_path(__FILE__) . 'templates/single-restaurants.php';
-                    include_once $path_template;
-                    $template = array( $path_template);
+                    $template = $path_template;
                 }  
             }
             return $template;
@@ -267,24 +261,12 @@ if (!class_exists('Theme')) {
                 
                 if(strcmp($path[0], "archive.php") === 0) {
                     $path_template = plugin_dir_path(__FILE__) . 'templates/archive-restaurants.php';
-                    include_once $path_template;
-                    $template =  array($path_template); 
+                    $template =  $path_template; 
                 }
             }
             return $template;
         }
         
-        /**
-         * Content display of custom post type
-         * 
-         * @var string  $slug   path of file
-         * @var string  $name   name of post type
-         */
-        public function load_archive_content() {
-            $slug = plugin_dir_path(__FILE__) . 'templates/content';
-            $name = 'restaurants';
-            load_template( $slug . '-' . $name .'.php', true );
-        }
         
         /**
          * add custom template for comment
