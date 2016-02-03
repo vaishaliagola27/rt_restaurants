@@ -91,31 +91,37 @@ if (!class_exists('Admin')) {
 			// output buffer start
 			ob_start();
 
+			
 			// Array for address fields
 			$addr = array("streetAddress" => "Street Address", "addressLocality" => "Locality", "addressRegion" => "Region", "postalCode" => "Postal Code", "addressCountry" => "Country");
 
 			// Retriving address post meta for particular post.
 			$add = get_post_meta($post->ID, '_restaurant_address', true);
 			?>
-			<table class="address_table">
-				<?php
-				foreach ($addr as $key => $value) {
-					if ($add != NULL && !empty($add)) {
-						$value = $add[0][$key];
-					} else {
-						$value = '';
+			<form method="post">
+				<?php 
+				wp_nonce_field('restaurant_address_nonce', 'restaurant_address_field', false);
+				?>
+				<table class="address_table">
+					<?php
+					foreach ($addr as $key => $value) {
+						if ($add != NULL && !empty($add)) {
+							$value = $add[0][$key];
+						} else {
+							$value = '';
+						}
+						?>
+						<tr>
+							<td><label> <?php echo $addr[$key]; ?></label></td>
+							<td>
+								<input size="15" type="text" name="<?php echo "restaurant_add[" . $key . "]"; ?>" value="<?php echo $value; ?>" />
+							</td> 
+						</tr>
+						<?php
 					}
 					?>
-					<tr>
-						<td><label> <?php echo $addr[$key]; ?></label></td>
-						<td>
-							<input size="15" type="text" name="<?php echo "restaurant_add[" . $key . "]"; ?>" value="<?php echo $value; ?>" />
-						</td> 
-					</tr>
-					<?php
-				}
-				?>
-			</table>
+				</table>
+			</form>
 			<?php
 			// Get output buffer value into variable and clear output buffer
 			$ob_address = ob_get_clean();
@@ -151,6 +157,9 @@ if (!class_exists('Admin')) {
 		 * @var array   $address    address of restaurant
 		 */
 		public function save_address($post_id) {
+			if(!isset($_POST['restaurant_address_field']) && !wp_verify_nonce($_POST['restaurant_address_field'])){
+				return;
+			}
 			if (isset($_POST['restaurant_add'])) {
 				$address = array($_POST['restaurant_add']);
 				update_post_meta($post_id, '_restaurant_address', $address);
@@ -170,6 +179,10 @@ if (!class_exists('Admin')) {
 		 * @var int $contactno  contact number of restaurant
 		 */
 		public function save_contactno($post_id) {
+			if(!isset($_POST['restaurant_contactno_nonce']) && !wp_verify_nonce($_POST['restaurant_contactno_nonce'])){
+				return;
+			}
+			
 			if (isset($_POST['restaurant_contact_no'])) {
 				$contactno = $_POST['restaurant_contact_no'];
 				update_post_meta($post_id, '_restaurant_contactno', $contactno);
@@ -204,6 +217,10 @@ if (!class_exists('Admin')) {
 		public function display_contactno($post){
 			// Output buffering start
 			ob_start();
+			?>
+			<form method="post">
+			<?php
+			wp_nonce_field('restaurant_contactno_nonce', 'restaurant_contactno_nonce', false);
 			$restaurant_contact = "";
 
 			// Retriving contact number of restaurant
@@ -214,7 +231,9 @@ if (!class_exists('Admin')) {
 				$restaurant_contact = $val;
 			}
 			echo "<input type='text' id='contact-no' value='" . $restaurant_contact . "' name='restaurant_contact_no' />";
-
+			?>
+				</form>
+			<?php
 			// Storing output buffer value into variable and clean output buffer.
 			$ob_contactno = ob_get_clean();
 
@@ -277,8 +296,13 @@ if (!class_exists('Admin')) {
 		public function display_timing($post){
 			// Output buffer starts
 			ob_start();
+			
 			?>
-			<form name="restaurant_timing">
+			<form name="restaurant_timing" method="post">
+				<?php 
+					wp_nonce_field('restaurant_timing_nonce', 'restaurant_timing_nonce', false);
+				?>
+				
 				<table style="font-size: 12px;margin:auto">
 					<tr style="text-align: center;font-size: 12px; font-weight: bold">
 						<td>Day</td>
@@ -344,6 +368,9 @@ if (!class_exists('Admin')) {
 		 * @var array   $close_days close days for restaurant
 		 */
 		public function save_timing($post_id) {
+			if(!isset($_POST['restaurant_timing_nonce']) && !wp_verify_nonce($_POST['restaurant_timing_nonce'])){
+				return;
+			}
 			if (isset($_POST['time'])) {
 				$time = array($_POST['time']);
 
