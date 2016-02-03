@@ -66,10 +66,10 @@ if (post_password_required()) {
 		?>
 
 		<p class="no-comments"><?php esc_html_e('Comments are closed.', '_s'); ?></p>
-	<?php
-endif;
+		<?php
+	endif;
 
-comment_form();
-?>
+	comment_form();
+	?>
 
 </div><!-- #comments -->

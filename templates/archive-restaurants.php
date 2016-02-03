@@ -17,7 +17,7 @@ get_header();
 			/* Start the Loop */
 			while (have_posts()) : the_post();
 				?><div class="archive-content">
-				<?php
+					<?php
 					the_title('<h2 class="archive-restaurant-title"><a href="' . esc_url(get_permalink()) . '" rel="bookmark">', '</a></h2>');
 					edit_post_link(
 						sprintf(
