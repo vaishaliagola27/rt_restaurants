@@ -15,6 +15,10 @@ if (!class_exists('Load')) {
 		 * initialize hooks and other classes' method called
 		 */
 		public function init() {
+			
+			//plugin activation
+			register_activation_hook(\rtCamp\WP\rtRestaurants\PATH . 'rt-restaurants.php', array($this, 'restaurants_flush_rewrites' ));
+			
 			//action for register post types
 			add_action('init', array($this, 'register_post_type'));
 
@@ -27,13 +31,12 @@ if (!class_exists('Load')) {
 			/**
 			 * Filter for initilize class objects and call init().
 			 *
-			 * Description.
 			 *  This filter will allow user to change classes names for creating objects and call init().
 			 * 
-			 * @since Unknown
+			 * @since 0.1
 			 *
-			 * @param string $var           Description. Name of filter
-			 * @param array $class_names    Description. array to store classes name
+			 * @param string $var           Name of filter
+			 * @param array $class_names    array to store classes name
 			 */
 			$class_names = apply_filters('wp_hrt_class_loader', $class_names);
 
@@ -50,17 +53,18 @@ if (!class_exists('Load')) {
 		}
 
 		/**
-		 * Summary. add new post type of restaurants
+		 * To flush the rewrite rules for plugin.
+		 */
+		public function restaurants_flush_rewrites() {
+			flush_rewrite_rules();
+		}
+		
+		/**
+		 * add new post type of restaurants
 		 *
-		 * Description.
 		 *  This function will add one or more custom post types.
 		 * 
-		 * @since Unknown
-		 * 
-		 * @var array   $labels         labels for custom post type
-		 * @var array   $taxonomy       taxonomies for custom post type
-		 * @var array   $args           arguments for custom post type
-		 * @var string  $new_post_types new post type to register
+		 * @since 0.1
 		 */
 		public function register_post_type() {
 			// Array of labels for restaurant post type
@@ -109,20 +113,17 @@ if (!class_exists('Load')) {
 			$new_post_types = array('restaurants' => $args);
 
 			/**
-			 * Summary. Filter for add multiple custom post types.
+			 * Filter for add multiple custom post types.
 			 *
-			 * Description.
-			 *  This filter will allow user to add multiple custom post types at once. USer just need to pass
-			 *     name and arguments of custom post types.  
+			 * This filter will allow user to add multiple custom post types at once. USer just need to pass
+			 * name and arguments of custom post types.  
 			 * 
-			 * @since Unknown
+			 * @since 0.1
 			 *
-			 * @param string $var Description. Name of filter
+			 * @param string $var Name of filter
 			 * @param array $new_post_types {
-			 *     Short description about this hash.
-			 *
-			 *     @type string $var Description. Name of custom post type.
-			 *     @type array  $var Description. Array of arguments of custom post type.
+			 *     @type string $var Name of custom post type.
+			 *     @type array  $var Array of arguments of custom post type.
 			 * }
 			 * @param type  $var Description.
 			 */
@@ -135,34 +136,29 @@ if (!class_exists('Load')) {
 		}
 
 		/**
-		 * Summary. register new texonomy to post type restaurants
+		 * register new texonomy to post type restaurants
 		 *
-		 * Description.
-		 *  This function will register one more taxonomy for custom post type.
+		 * This function will register one more taxonomy for custom post type.
 		 * 
-		 * @since Unknown
+		 * @since 0.1
 		 * 
-		 * @var array   $taxonomy   taxonomy to register
-		 * @var array   $args       arguments of taxonomy
-		 * @var string  $post_type  post type for taxonomy
 		 */
 		public function register_taxonomy() {
 			// Array of taxomy name and label to register.
 			$taxonomy = array('restaurants_type' => 'Restaurants Type', 'food_type' => 'Food Type');
 
 			/**
-			 * Summary. Filter to register more than one taxonomies.
+			 * Filter to register more than one taxonomies.
 			 *
-			 * Description.
-			 *     This filter will allow user to register more than 1 taxonomy at a time by giving key and label of each
-			 *     taxonomy in array. 
+			 * This filter will allow user to register more than 1 taxonomy at a time by giving key and label of each
+			 * taxonomy in array. 
 			 *
-			 * @since Unknown
+			 * @since 0.1
 			 *
-			 * @param string  $var Description. Filter name.
+			 * @param string  $var Filter name.
 			 * @param array $args {
-			 *     @type string $var Description. key for taxonomy
-			 *     @type string $var Description. Label for taxonomy
+			 *     @type string $var key for taxonomy
+			 *     @type string $var Label for taxonomy
 			 * }
 			 */
 			$taxonomy = apply_filters('rt_restaurant_get_taxonomies_with_label', $taxonomy);
@@ -177,15 +173,14 @@ if (!class_exists('Load')) {
 				);
 
 				/**
-				 * Summary. Filter to change taxonomy arguments
+				 * Filter to change taxonomy arguments
 				 *
-				 * Description.
-				 *   This filter allow user to change taxonomy arguments by passing arguments array in filter.
+				 * This filter allow user to change taxonomy arguments by passing arguments array in filter.
 				 * 
-				 * @since Unknown
+				 * @since 0.1
 				 *
-				 * @param string $var    Description. Filter name
-				 * @param array  $args   Description. Array of arguments for taxonomy
+				 * @param string $var    Filter name
+				 * @param array  $args   Array of arguments for taxonomy
 				 */
 				$args = apply_filters('rt_restaurant_taxonomy_args', $args);
 

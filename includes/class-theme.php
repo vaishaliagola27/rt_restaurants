@@ -33,21 +33,19 @@ if (!class_exists('Theme')) {
 		}
 
 		/**
-		 * Summary.   enqueue css for restaurant post type
+		 * enqueue css for restaurant post type
 		 *
-		 * @since Unknown.
+		 * @since 0.1
 		 * 
-		 * @var string  $template_directory_uri stores current template directory uri
 		 */
 		public function add_css_js() {
-			$template_directory_uri = plugin_dir_url(__FILE__);
-
+			$template_directory_uri = \rtCamp\WP\rtRestaurants\URL;
 
 			wp_enqueue_script('jquery');
 			wp_localize_script('jquery', 'ajax_object', admin_url('admin-ajax.php'));
 
 			// Enqueuing styles 
-			wp_enqueue_style("restaurants_css", $template_directory_uri . '/assets/css/restaurant.css');
+			wp_enqueue_style("restaurants_css", $template_directory_uri . 'assets/css/restaurant.css');
 			wp_enqueue_style("Slick_css", $template_directory_uri . 'lib/slick/slick/slick.css');
 			wp_enqueue_style("Slick_theme_css", $template_directory_uri . 'lib/slick/slick/slick-theme.css');
 
@@ -65,12 +63,11 @@ if (!class_exists('Theme')) {
 		}
 
 		/**
-		 * Summary.   Review field add, save review and display review
+		 *  Review field add, save review and display review
 		 *
-		 * Description.
 		 *  Function to change default fields of comment by providing them in array.
 		 * 
-		 * @since Unknown
+		 * @since 0.1
 		 * 
 		 * @var array   $default    default fields of review
 		 */
@@ -81,15 +78,14 @@ if (!class_exists('Theme')) {
 			$default ['label_submit'] = __('Post Review');
 
 			/**
-			 * Summary. Filter for change in default fields of comment
+			 *  Filter for change in default fields of comment
 			 *
-			 * Description.
 			 *  This filter will help user to change default fields of comment by providing them in array.  
 			 * 
-			 * @since Unknown
+			 * @since 0.1
 			 *
-			 * @param string  $var     Description. name of filter
-			 * @param array   $default Description. array for default fields of comment.
+			 * @param string  $var     name of filter
+			 * @param array   $default array for default fields of comment.
 			 */
 			$default = apply_filters('rt_restaurant_default_comment_fields', $default);
 
@@ -97,12 +93,11 @@ if (!class_exists('Theme')) {
 		}
 
 		/**
-		 * Summary. Add field of rating in review
+		 *  Add field of rating in review
 		 *
-		 * Description.
 		 *  This function add rating form to Review.
 		 * 
-		 * @since Unknown
+		 * @since 0.1
 		 * 
 		 * @var string  $ob_rating  output buffer value
 		 */
@@ -122,14 +117,13 @@ if (!class_exists('Theme')) {
 			$ob_rating = ob_get_clean();
 
 			/**
-			 * Summary. change html of additional fields.
+			 *  change html of additional fields.
 			 *
-			 * Description.
 			 *  This filter will help user to change in display of additional fields of comments
 			 * 
-			 * @since Unknown
+			 * @since 0.1
 			 *
-			 * @param string $var Description. name of the filter
+			 * @param string $var name of the filter
 			 * @param string $ob_rating
 			 */
 			$ob_rating = apply_filters('rt_restaurant_rating_html', $ob_rating);
@@ -137,20 +131,15 @@ if (!class_exists('Theme')) {
 		}
 
 		/**
-		 * Summary. Display review of restaurants
+		 * Display review of restaurants
 		 *
-		 * Description.
 		 *  This function will display custom review display code for restaurant post type.
-		 * @since Unknown
 		 * 
-		 * @param array $review Description. Array of comments
+		 * @since 0.1
+		 * 
+		 * @param array $review Array of comments
 		 * @param string $args
 		 * @param int $depth
-		 * 
-		 * @var string  $tag            for html tag
-		 * @var string  $add_below      html tag class
-		 * @var int     $commentrating  rating for review
-		 * @var string  $ob_review_all  output buffer value
 		 */
 		public static function reviews_html($review, $args, $depth) {
 			// Output buffer starts
@@ -192,7 +181,7 @@ if (!class_exists('Theme')) {
 				<?php
 				// fetching rating value for review
 				$commentrating = get_comment_meta(get_comment_ID(), 'rating', true);
-				$star_url = plugin_dir_url(__FILE__) . 'assets/images/';
+				$star_url = \rtCamp\WP\rtRestaurants\PATH . 'assets/images/';
 				?>
 				<p class="comment-rating" itemprop="reviewRating" itemscope itemtype="http://schema.org/Rating">
 					<img src="<?php echo $star_url . $commentrating . 'star.png'; ?>" />
@@ -212,12 +201,11 @@ if (!class_exists('Theme')) {
 			$ob_review_all = ob_get_clean();
 
 			/**
-			 * Summary. Allow to change review display
+			 * Allow to change review display
 			 *
-			 * Description.
-			 *      User can change display of reviews by using this filter. Add output string into $ob_review_all variable.
+			 *  User can change display of reviews by using this filter. Add output string into $ob_review_all variable.
 			 *
-			 * @since Unknown
+			 * @since 0.1
 			 *
 			 * @param string  $var 
 			 * @param string $ob_review_all  
@@ -229,17 +217,17 @@ if (!class_exists('Theme')) {
 		/**
 		 * loads template 
 		 * 
+		 * @since 0.1
+		 * 
 		 * @param array $template array of file paths
 		 * 
-		 * @var array   $path           array of file path chunks
-		 * @var array   $path_template  path for archive file
 		 */
 		public function load_template($template) {
 			if (is_singular('restaurants')) {
 				$path = explode("/", $template);
 				$path = array_reverse($path);
 				if (strcmp($path[0], "single.php") === 0) {
-					$path_template = plugin_dir_path(__FILE__) . 'templates/single-restaurants.php';
+					$path_template = \rtCamp\WP\rtRestaurants\PATH . 'templates/single-restaurants.php';
 					$template = $path_template;
 				}
 			}
@@ -249,10 +237,10 @@ if (!class_exists('Theme')) {
 		/**
 		 * loads archive page of template restaurants
 		 * 
+		 * @since 0.1
+		 * 
 		 * @param array $template  array of file paths
 		 * 
-		 * @var array   $path           array of file path chunks
-		 * @var array   $path_template  path for archive file
 		 */
 		public function load_archive_restaurants($template) {
 			if (is_post_type_archive('restaurants')) {
@@ -260,7 +248,7 @@ if (!class_exists('Theme')) {
 				$path = array_reverse($path);
 
 				if (strcmp($path[0], "archive.php") === 0) {
-					$path_template = plugin_dir_path(__FILE__) . 'templates/archive-restaurants.php';
+					$path_template = \rtCamp\WP\rtRestaurants\PATH . 'templates/archive-restaurants.php';
 					$template = $path_template;
 				}
 			}
@@ -270,12 +258,13 @@ if (!class_exists('Theme')) {
 		/**
 		 * add custom template for comment
 		 * 
+		 * @since 0.1
+		 * 
 		 * @param string $theme_template
 		 * 
-		 * @var string  $path   path for comment template file
 		 */
 		public function review_template($theme_template) {
-			$path = plugin_dir_path(__FILE__) . 'templates/comments-restaurants.php';
+			$path = \rtCamp\WP\rtRestaurants\PATH . 'templates/comments-restaurants.php';
 			return $path;
 		}
 

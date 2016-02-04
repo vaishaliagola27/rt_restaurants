@@ -60,12 +60,11 @@ if (!class_exists('Admin')) {
 		}
 
 		/**
-		 * Summary. add new meta box of address for restaurants post type.
+		 *  add new meta box of address for restaurants post type.
 		 *
-		 * Description.
 		 *  Function to add address meta box.
 		 * 
-		 * @since Unknown 
+		 * @since 0.1
 		 */
 		public function add_address() {
 			add_meta_box(
@@ -74,39 +73,30 @@ if (!class_exists('Admin')) {
 		}
 
 		/**
-		 * Summary. display/add meta box on restaurants post.
+		 *  display/add meta box on restaurants post.
 		 *
-		 * Description.
 		 *  Function for adding meta box for restaurant address.
 		 * 
-		 * @since Unknown
+		 * @since 0.1
 		 * 
 		 * @param array $post
-		 * 
-		 * @var array   $addr       array for address fields
-		 * @var array   $add        current existing address
-		 * @var string  $ob_address output buffer value
 		 */
 		public function display_address($post){
 			// output buffer start
 			ob_start();
-
-			
+			wp_nonce_field('rt_restaurant_address_nonce', 'restaurant_address_nonce', false);
 			// Array for address fields
 			$addr = array("streetAddress" => "Street Address", "addressLocality" => "Locality", "addressRegion" => "Region", "postalCode" => "Postal Code", "addressCountry" => "Country");
 
 			// Retriving address post meta for particular post.
 			$add = get_post_meta($post->ID, '_restaurant_address', true);
-			?>
-			<form method="post">
-				<?php 
-				wp_nonce_field('restaurant_address_nonce', 'restaurant_address_field', false);
+				
 				?>
 				<table class="address_table">
 					<?php
 					foreach ($addr as $key => $value) {
 						if ($add != NULL && !empty($add)) {
-							$value = $add[0][$key];
+							$value = $add[$key];
 						} else {
 							$value = '';
 						}
@@ -114,27 +104,25 @@ if (!class_exists('Admin')) {
 						<tr>
 							<td><label> <?php echo $addr[$key]; ?></label></td>
 							<td>
-								<input size="15" type="text" name="<?php echo "restaurant_add[" . $key . "]"; ?>" value="<?php echo $value; ?>" />
+								<input size="15" type="text" name="<?php echo "restaurant_add[" . $key . "]"; ?>" value="<?php echo empty($value)?' ' : $value; ?>" />
 							</td> 
 						</tr>
 						<?php
 					}
 					?>
 				</table>
-			</form>
 			<?php
 			// Get output buffer value into variable and clear output buffer
 			$ob_address = ob_get_clean();
 
 			/**
-			 * Summary. Filter for change post meta box display of address post meta.
+			 *  Filter for change post meta box display of address post meta.
 			 *
-			 * Description.
-			 *  This filter allow user to change meta box of address post meta by passing output string.
+			 * This filter allow user to change meta box of address post meta by passing output string.
 			 * 
-			 * @since Unknown
+			 * @since 0.1
 			 *
-			 * @param string $var Description. Filter name
+			 * @param string $var    Filter name
 			 * @param string $ob_address
 			 */
 			$ob_address = apply_filters('rt_restaurant_address_html', $ob_address);
@@ -143,56 +131,93 @@ if (!class_exists('Admin')) {
 		public function add_address_meta_box($post) {
 			echo $this->display_address($post);
 		}
-
+		
 		/**
-		 * Summary. Saves or Update address postmeta 
+		 *  Saves or Update address postmeta 
 		 *
-		 * Description.
 		 *  This function will save or update post meta of restaurant address.
 		 * 
-		 * @since Unknown
+		 * @since 0.1
 		 * 
 		 * @param int $post_id  
 		 * 
 		 * @var array   $address    address of restaurant
 		 */
 		public function save_address($post_id) {
-			if(!isset($_POST['restaurant_address_field']) && !wp_verify_nonce($_POST['restaurant_address_field'])){
+			
+			if(empty($post_id)) {
+				$post_id = $_POST['post_ID'];
+			}
+			
+			if(empty($post_id)) {
 				return;
 			}
-			if (isset($_POST['restaurant_add'])) {
-				$address = array($_POST['restaurant_add']);
-				update_post_meta($post_id, '_restaurant_address', $address);
+			
+			$address_nonce = !empty($_POST['restaurant_address_nonce']) ? $_POST['restaurant_address_nonce'] : '' ;
+			
+			if(empty($address_nonce)) {	
+				return;
 			}
+
+			if(!wp_verify_nonce($_POST['restaurant_address_nonce'] , 'rt_restaurant_address_nonce' )){
+				return;
+			}
+			$address = isset($_POST['restaurant_add']) ? $_POST['restaurant_add'] : '' ;
+			if (empty($address)) {
+				return;
+			}
+			
+			foreach($address as $key =>$value){
+				$address[$key]=sanitize_text_field($value);
+			}
+			
+			update_post_meta($post_id, '_restaurant_address', $address);
+			
 		}
 
 		/**
 		 * Summary.Saves or update contact number of restaurant
-		 *
-		 * Description.
+		 *  
 		 *  This function will add or update post meta of contact number of restaurants.
 		 * 
-		 * @since Unknown
+		 * @since 0.1
 		 * 
 		 * @param int $post_id
 		 * 
 		 * @var int $contactno  contact number of restaurant
 		 */
 		public function save_contactno($post_id) {
-			if(!isset($_POST['restaurant_contactno_nonce']) && !wp_verify_nonce($_POST['restaurant_contactno_nonce'])){
+			if(empty($post_id)) {
+				$post_id = $_POST['post_ID'];
+			}
+			
+			if(empty($post_id)) {
 				return;
 			}
 			
-			if (isset($_POST['restaurant_contact_no'])) {
-				$contactno = $_POST['restaurant_contact_no'];
-				update_post_meta($post_id, '_restaurant_contactno', $contactno);
+			$contactno_nonce = !empty($_POST['restaurant_contactno_nonce']) ? $_POST['restaurant_contactno_nonce'] : '' ;
+			
+			if(empty($contactno_nonce)) {	
+				return;
 			}
+			
+			if(!wp_verify_nonce($_POST['restaurant_contactno_nonce'] , 'rt_restaurant_contactno_nonce' )){
+				return;
+			}
+			
+			$contact_no = isset($_POST['restaurant_contact_no']) ? $_POST['restaurant_contact_no'] : '' ;
+			if (empty($contact_no)) {
+				return;
+			}
+
+			update_post_meta($post_id, '_restaurant_contactno', $contact_no);
+
 		}
 
 		/**
-		 * Summary.add new meta box for contact number
+		 * add new meta box for contact number
 		 * 
-		 * @since Unknown.
+		 * @since 0.1.
 		 */
 		public function add_contactno() {
 			add_meta_box(
@@ -201,26 +226,19 @@ if (!class_exists('Admin')) {
 		}
 
 		/**
-		 * Summary. display/add meta box on restaurants post
+		 * display/add meta box on restaurants post
 		 * 
-		 * Description.
-		 *  Function to add contact number meta box into restaurant post type.
+		 * Function to add contact number meta box into restaurant post type.
 		 * 
-		 * @since Unknown
+		 * @since 0.1
 		 * 
 		 * @param array $post
 		 * 
-		 * @var int     $restaurant_contact contact number
-		 * @var int     $val                current existing contact number
-		 * @var string  $ob_contactno       output buffer value
 		 */
 		public function display_contactno($post){
 			// Output buffering start
 			ob_start();
-			?>
-			<form method="post">
-			<?php
-			wp_nonce_field('restaurant_contactno_nonce', 'restaurant_contactno_nonce', false);
+			wp_nonce_field('rt_restaurant_contactno_nonce', 'restaurant_contactno_nonce', false);
 			$restaurant_contact = "";
 
 			// Retriving contact number of restaurant
@@ -231,21 +249,18 @@ if (!class_exists('Admin')) {
 				$restaurant_contact = $val;
 			}
 			echo "<input type='text' id='contact-no' value='" . $restaurant_contact . "' name='restaurant_contact_no' />";
-			?>
-				</form>
-			<?php
+			
 			// Storing output buffer value into variable and clean output buffer.
 			$ob_contactno = ob_get_clean();
 
 			/**
-			 * Summary. Filter for Change in contact number meta box
+			 *  Filter for Change in contact number meta box
 			 *
-			 * Description.
 			 *  This filter will allow user to change display of post meta contact number
 			 * 
-			 * @since Unknown
+			 * @since 0.1
 			 *
-			 * @param string $var Description. Name of filter
+			 * @param string $var    Name of filter
 			 * @param string $ob_contactno 
 			 */
 			$ob_contactno = apply_filters('rt_restaurant_contactno_html', $ob_contactno);
@@ -261,9 +276,9 @@ if (!class_exists('Admin')) {
 		}
 
 		/**
-		 * Summary.   add meta box for timing
+		 * add meta box for timing
 		 *
-		 * @since Unknown
+		 * @since 0.1
 		 */
 		public function add_timing() {
 			add_meta_box(
@@ -280,18 +295,14 @@ if (!class_exists('Admin')) {
 		}
 		
 		/**
-		 * Summary. add timing meta box on restaurant post display
-		 *
-		 * Description.
+		 *  add timing meta box on restaurant post display
+		 *  
 		 *  add timing meta box.
 		 *
-		 * @since Unknown
+		 * @since 0.1
 		 * 
 		 * @param int $post
 		 * 
-		 * @var array   $time                   current time of restaurant
-		 * @var array   $days                   array for key and name of days
-		 * @var string  $ob_timing_working_days output buffer value
 		 */
 		public function display_timing($post){
 			// Output buffer starts
@@ -300,7 +311,7 @@ if (!class_exists('Admin')) {
 			?>
 			<form name="restaurant_timing" method="post">
 				<?php 
-					wp_nonce_field('restaurant_timing_nonce', 'restaurant_timing_nonce', false);
+					wp_nonce_field('rt_restaurant_timing_nonce', 'restaurant_timing_nonce', false);
 				?>
 				
 				<table style="font-size: 12px;margin:auto">
@@ -318,18 +329,18 @@ if (!class_exists('Admin')) {
 
 						// Check if time is not already set for restaurant
 						if (!empty($time) && is_array($time)) {
-							if ($time[0][$key][0] != NULL) {
-								$am = $time[0][$key][0];
+							if ($time[$key][0] != NULL) {
+								$am = $time[$key][0];
 							}
-							if ($time[0][$key][1] != NULL) {
-								$pm = $time[0][$key][1];
+							if ($time[$key][1] != NULL) {
+								$pm = $time[$key][1];
 							}
 						}
 						?>
 						<tr>
 							<td name=" <?php echo $day ?> "> <?php echo $day ?> </td>
-							<td><input type="text" name="<?php echo "time[" . $key . "][]"; ?>" size="3" value=" <?php echo $am ?> ">AM</td>
-							<td><input type="text" name="<?php echo "time[" . $key . "][]"; ?>" size="3" value=" <?php echo $pm ?> ">PM</td>
+							<td><input type="text" name="<?php echo "time[" . $key . "][]"; ?>" size="3" value="<?php echo $am; ?>">AM</td>
+							<td><input type="text" name="<?php echo "time[" . $key . "][]"; ?>" size="3" value="<?php echo $pm; ?>">PM</td>
 						</tr>
 						<?php
 					}
@@ -341,78 +352,81 @@ if (!class_exists('Admin')) {
 			$ob_timing_working_days = ob_get_clean();
 
 			/**
-			 * Summary. Filter for display change of working days meta box.
+			 *  Filter for display change of working days meta box.
 			 *
-			 * Description.
-			 *  This filter will allow user to change display of working days and time on admin side by passing html text as arguments. 
+			 * This filter will allow user to change display of working days and time on admin side by passing html text as arguments. 
 			 *
-			 * @since Unknown
+			 * @since 0.1
 			 *
-			 * @param string $var Description. name of filter
+			 * @param string $var    name of filter
 			 * @param string $ob_timing_working_days
 			 */
 			$ob_timing_working_days = apply_filters('rt_restaurant_timing_working_days_html', $ob_timing_working_days);
 			return $ob_timing_working_days;
 		}
 		/**
-		 * Summary. save timing postmeta for restaurant
+		 *  save timing postmeta for restaurant
 		 * 
-		 * Description.
 		 *  Function to save time and close days.
 		 * 
-		 * @since Unknown
+		 * @since 0.1
 		 * 
 		 * @param int $post_id
-		 * 
-		 * @var array   $time       time data for current post
-		 * @var array   $close_days close days for restaurant
 		 */
 		public function save_timing($post_id) {
-			if(!isset($_POST['restaurant_timing_nonce']) && !wp_verify_nonce($_POST['restaurant_timing_nonce'])){
+			if(empty($post_id)) {
+				$post_id = $_POST['post_ID'];
+			}
+			
+			if(empty($post_id)) {
 				return;
 			}
-			if (isset($_POST['time'])) {
-				$time = array($_POST['time']);
-
-				update_post_meta($post_id, '_timing', $time);
-				// Computing close days
-				$close_days = array();
-				$i = 0;
-
-				foreach ($time[0] as $key => $day) {
-					if ($day[0] == NULL && $day[1] == NULL) {
-						$close_days[$i++] = ($key);
-					}
-				}
-
-				/**
-				 * Summary. Filter for close day calculation
-				 *
-				 * Description.
-				 *   This filter help user to make change in close day calculation code   
-				 * 
-				 * @since Unknown
-				 *
-				 * @param string $var        Description. name of filter
-				 * @param string $close_days Description. text change in close day calculation 
-				 */
-				$close_days = apply_filters('rt_restaurant_close_days', $close_days);
-				update_post_meta($post_id, '_close_days', $close_days);
+			
+			$timing_nonce = !empty($_POST['restaurant_timing_nonce']) ? $_POST['restaurant_timing_nonce'] : '' ;
+			
+			if(empty($timing_nonce)) {	
+				return;
 			}
+			
+			if(!wp_verify_nonce($_POST['restaurant_timing_nonce'] , 'rt_restaurant_timing_nonce' )){
+				return;
+			}
+			$time = isset($_POST['time']) ? $_POST['time'] : '' ;
+			if (empty($time)) {
+				return;
+			}
+			
+
+			update_post_meta($post_id, '_timing', $time);
+			// Computing close days
+			$close_days = array();
+			$i = 0;
+			foreach ($time as $key => $day) {
+				if ($day[0] == '' && $day[1] == '') {
+					$close_days[$i++] = ($key);
+				}
+			}
+			/**
+			 *  Filter for close day calculation
+			 * 
+			 * This filter help user to make change in close day calculation code   
+			 * 
+			 * @since 0.1
+			 *
+			 * @param string $var           name of filter
+			 * @param string $close_days    text change in close day calculation 
+			 */
+			$close_days = apply_filters('rt_restaurant_close_days', $close_days);
+			update_post_meta($post_id, '_close_days', $close_days);
 		}
 
 		/**
-		 * Summary.   add fields to review.
+		 *  add fields to review.
 		 *
-		 * Description.
 		 *  Function to add custom fields in comment of custom post.
 		 * 
-		 * @since Unknown
+		 * @since 0.1
 		 * 
-		 * @var array   $commenter  current commentor data
-		 * @var boolean $req        fields require value
-		 * @var boolean $aria_req   set value for area required or not
-		 * @var array   $fields     custom fields for review 
 		 */
 		public function custom_fields() {
 			$commenter = wp_get_current_commenter();
@@ -432,15 +446,14 @@ if (!class_exists('Admin')) {
 				'" size="30" ' . $aria_req . ' /></p>';
 
 			/**
-			 * Summary. filter for custom fields of comment
-			 *
-			 * Description.
+			 *  filter for custom fields of comment
+			 *   
 			 *  This filter will help user to add custom fields in comment of custom post
 			 * 
-			 * @since Unknown
+			 * @since 0.1
 			 *
-			 * @param string  $var Description. name of filter
-			 * @param array $fields Description. array of custom fields for comment
+			 * @param string  $var    name of filter
+			 * @param array $fields    array of custom fields for comment
 			 */
 			$fields = apply_filters('rt_restaurant_custom_comment_fields', $fields);
 
@@ -448,16 +461,14 @@ if (!class_exists('Admin')) {
 		}
 
 		/**
-		 * Summary. Add amd Save the comment meta rating along with comment
+		 *  Add amd Save the comment meta rating along with comment
 		 *
-		 * Description.
 		 *  This function will add comment meta rating and save to comment. 
 		 * 
-		 * @since Unknown
+		 * @since 0.1
 		 * 
 		 * @param int $comment_id
 		 * 
-		 * @var int $rating rating value of particular review
 		 */
 		public function save_comment_meta_data($comment_id) {
 			if (( isset($_POST['rating']) ) && ( $_POST['rating'] != ''))
@@ -468,11 +479,10 @@ if (!class_exists('Admin')) {
 		}
 
 		/**
-		 * Summary. To check that rating is given or not
-		 *
-		 * Description.
-		 *  This function will check if reviwer has also give rating to restaurant.
-		 * @since Unknown
+		 * To check that rating is given or not
+		 *  
+		 * This function will check if reviwer has also give rating to restaurant.
+		 * @since 0.1
 		 * 
 		 * @param array commentdata
 		 */
@@ -483,35 +493,31 @@ if (!class_exists('Admin')) {
 		}
 
 		/**
-		 *  Summary. Add an comment meta box of rating
+		 * Add an comment meta box of rating
+		 *  
+		 * Add comment meta box for rating of restaurant.
 		 *
-		 * Description.
-		 *  add comment meta box for rating of restaurant.
-		 *
-		 * @since Unknown
+		 * @since 0.1
 		 */
 		public function extend_comment_add_meta_box() {
 			add_meta_box('title', __('Comment Metadata - Extend Comment'), array($this, 'extend_comment_meta_box'), 'comment', 'normal', 'high');
 		}
 
 		/**
-		 * Summary. edit comment meta box. 
-		 *
-		 * Description.
-		 *  This function will extend comment of custom post type restaurants.
+		 * Edit comment meta box. 
+		 * 
+		 * This function will extend comment of custom post type restaurants.
 		 *  
-		 * @since Unknown
+		 * @since 0.1
 		 * 
 		 * @param array $comment
 		 * 
-		 * @var int     $rating                 rating value of review
-		 * @var sting   $ob_rating_display_edit output buffer value
 		 */
 		public function extend_comment_meta_box($comment) {
 			// Output buffer starts
 			ob_start();
 			$rating = get_comment_meta($comment->comment_ID, 'rating', true);
-			wp_nonce_field('extend_comment_update', 'extend_comment_update', false);
+			wp_nonce_field('rt_extend_comment_update', 'extend_comment_update', false);
 			?>
 			<p>
 				<label for="rating"><?php _e('Rating: '); ?></label>
@@ -531,12 +537,11 @@ if (!class_exists('Admin')) {
 			$ob_rating_display_edit = ob_get_clean();
 
 			/**
-			 * Summary. change display of rating
+			 *  change display of rating
+			 *  
+			 * user can change display of rating by this filter. output will store in $ob_rating_display_edit variable.
 			 *
-			 * Description.
-			 *     user can change display of rating by this filter. output will store in $ob_rating_display_edit variable.
-			 *
-			 * @since Unknown
+			 * @since 0.1
 			 *
 			 * @param string  $var .
 			 * @param string $ob_rating_display_edit 
@@ -546,19 +551,17 @@ if (!class_exists('Admin')) {
 		}
 
 		/**
-		 * Summary. Update comment meta data from comment editing screen 
-		 *
-		 * Description.
-		 *  This function will add or update new comment.
+		 * Update comment meta data from comment editing screen 
+		 *  
+		 * This function will add or update new comment.
 		 * 
-		 * @since Unknown
+		 * @since 0.1
 		 *
 		 * @param int $comment_id
 		 * 
-		 * @var int $rating rating of restaurant
 		 */
 		public function extend_comment_edit_metafields($comment_id) {
-			if (!isset($_POST['extend_comment_update']) || !wp_verify_nonce($_POST['extend_comment_update'], 'extend_comment_update'))
+			if (!isset($_POST['extend_comment_update']) || !wp_verify_nonce($_POST['extend_comment_update'], 'rt_extend_comment_update'))
 				return;
 
 			if (( isset($_POST['rating']) ) && ( $_POST['rating'] != '')):
@@ -571,22 +574,14 @@ if (!class_exists('Admin')) {
 		}
 
 		/**
-		 * Summary. Set transient to store ratting and postmeta to store average
+		 *  Set transient to store ratting and postmeta to store average
 		 *
-		 * Description.
 		 *  This function will create transient to store ratting total and total count of comment. It also create or update 
-		 *      restaurant_ratting post meta.
-		 * @since Unknown
+		 *  restaurant_ratting post meta.
 		 * 
-		 * @param int $comment_id Description. Current comment id
+		 * @since 0.1
 		 * 
-		 * @var array   $comment        current review data
-		 * @var array   $total_comments total reviews for restaurant
-		 * @var array   $args           arguments for fetching all reviews
-		 * @var int     $rating         total rating for restaurant
-		 * @var int     $cnt            Total number of ratings
-		 * @var float   $average        average rating for restaurant
-		 * @var array   $transient_args arguments for transient
+		 * @param int $comment_id	Current comment id
 		 * 
 		 */
 		public function add_transient_rating($comment_id) {
@@ -623,9 +618,13 @@ if (!class_exists('Admin')) {
 		}
 
 		/**
+		 *  Add columns in display of all restaurants
 		 * 
-		 * @param type $columns
-		 * @return type
+		 * @since 0.1
+		 * 
+		 * @param	array	$columns
+		 * 
+		 * @return	array	$new_columns
 		 */
 		public function add_restaurants_columns($columns) {
 			$new_columns = array_merge($columns, array(
@@ -637,10 +636,14 @@ if (!class_exists('Admin')) {
 		}
 
 		/**
+		 * display data into columns
 		 * 
-		 * @global type $post
-		 * @param type $column
-		 * @param type $post_id]
+		 * @since 0.1
+		 * 
+		 * @global array $post
+		 * 
+		 * @param array $column
+		 * @param int $post_id
 		 */
 		public function manage_restaurants_columns($column, $post_id) {
 			global $post;
@@ -653,7 +656,7 @@ if (!class_exists('Admin')) {
 						$add = "";
 						$addr = array("streetAddress", "addressLocality", "addressRegion", "postalCode", "addressCountry");
 						foreach ($addr as $key) {
-							$add .= '  ' . $address[0][$key];
+							$add .= '  ' . $address[$key];
 						}
 						echo $add;
 					}
@@ -661,15 +664,15 @@ if (!class_exists('Admin')) {
 				case 'timing' :
 					$current_post_timing = get_post_meta($post->ID, '_timing', true);
 					$days = array("mon" => "Monday", "tue" => "Tuesday", "wed" => "Wednesday", "thu" => "Thursday", "fri" => "Friday", "sat" => "Saturday", "sun" => "Sunday");
-					foreach ($current_post_timing[0] as $key => $day) {
+					foreach ($current_post_timing as $key => $day) {
 						?>
 						<p> <?php echo $days[$key] ?> </p>
-						<?php if ($day[0] == ' ' && $day[1] == '') { ?>
+						<?php if ($day[0] == NULL && $day[1] == NULL) { ?>
 							<p>Close</p>
 						<?php } else {
 							?>
-							<?php echo $current_post_timing[0][$key][0] ?>AM To 
-							<?php echo $current_post_timing[0][$key][1] ?>PM
+							<?php echo $current_post_timing[$key][0] ?>AM To 
+							<?php echo $current_post_timing[$key][1] ?>PM
 						<?php
 						}
 					}
@@ -689,9 +692,12 @@ if (!class_exists('Admin')) {
 		}
 
 		/**
+		 * Display contents to quick edit
 		 * 
-		 * @param type $column_name
-		 * @param type $post_type
+		 * @since 0.1
+		 * 
+		 * @param string $column_name
+		 * @param string $post_type
 		 */
 		public function display_custom_quickedit_restaurant($column_name, $post_type) {
 			global $post;

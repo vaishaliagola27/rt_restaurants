@@ -1,5 +1,4 @@
 <?php
-
 /*
   Plugin Name: rtRestaurants
   Plugin URI:  http://rtcamp.com
@@ -19,18 +18,12 @@ namespace rtCamp\WP\rtRestaurants;
 //define constant for plugin directory path
 define('rtCamp\WP\rtRestaurants\PATH', plugin_dir_path(__FILE__));
 
-register_activation_hook(__FILE__, 'rt_restaurants_flush_rewrites');
+//define constant for plugin directory url
+define('rtCamp\WP\rtRestaurants\URL' , plugin_dir_url(__FILE__));
 
-/**
- * To flush the rewrite rules for plugin.
- */
-function rt_restaurants_flush_rewrites() {
-	flush_rewrite_rules();
-}
-
-require_once 'class-load.php';
-require_once 'class-theme.php';
-require_once 'class-admin.php';
+require_once \rtCamp\WP\rtRestaurants\PATH . 'includes/class-load.php';
+require_once \rtCamp\WP\rtRestaurants\PATH . 'includes/class-theme.php';
+require_once \rtCamp\WP\rtRestaurants\PATH . 'includes/class-admin.php';
 
 $load_data = new Load();
 $load_data->init();

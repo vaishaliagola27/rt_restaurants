@@ -43,8 +43,8 @@ if (is_singular('restaurants')) {
 							$address = '';
 							foreach ($addr as $key) {
 								?>
-								<span itemprop = "<?php echo $key ?>"> <?php echo $current_post_address[0][$key];
-						$address .= "," . $current_post_address[0][$key]; ?><br /></span>
+								<span itemprop = "<?php echo $key ?>"> <?php echo $current_post_address[$key];
+						$address .= "," . $current_post_address[$key]; ?><br /></span>
 								<?php
 							}
 							?>
@@ -55,15 +55,14 @@ if (is_singular('restaurants')) {
 						$ob_restaurant_address = ob_get_clean();
 
 						/**
-						 * Summary.  Filter for changing address html
+						 *  Filter for changing address html
 						 *
-						 * Description.
 						 *   This filter will allow you to customize the look of address post meta
 						 * 
-						 * @since Unknown
+						 * @since 0.1
 						 *
-						 * @param string  $var   Description.  Filter name
-						 * @param string  $ob_restaurant_address Description. output string of address html
+						 * @param string  $var   Filter name
+						 * @param string  $ob_restaurant_address  output string of address html
 						 */
 						$ob_restaurant_address = apply_filters('rt_restaurant_address_html', $ob_restaurant_address);
 
@@ -99,15 +98,14 @@ if (is_singular('restaurants')) {
 							$ob_restaurant_type = ob_get_clean();
 
 							/**
-							 * Summary.  Filter for changing restaurant type html
+							 *  Filter for changing restaurant type html
 							 *
-							 * Description.
 							 *   This filter will allow you to customize the look of restaurant type taxonomy.
 							 * 
-							 * @since Unknown
+							 * @since 0.1
 							 *
-							 * @param string  $var   Description.  Filter name
-							 * @param string  $ob_restaurant_type Description. output string of restaurant type html
+							 * @param string  $var     Filter name
+							 * @param string  $ob_restaurant_type  output string of restaurant type html
 							 */
 							$ob_restaurant_type = apply_filters('rt_restaurant_type_html', $ob_restaurant_type);
 
@@ -135,15 +133,14 @@ if (is_singular('restaurants')) {
 						$ob_food_type = ob_get_clean();
 
 						/**
-						 * Summary.  Filter for changing food type html
+						 *  Filter for changing food type html
 						 *
-						 * Description.
 						 *   This filter will allow you to customize the look of food type taxonomy.
 						 * 
-						 * @since Unknown
+						 * @since 0.1
 						 *
-						 * @param string  $var   Description.  Filter name
-						 * @param string  $ob_food_type Description. output string of food type html
+						 * @param string  $var     Filter name
+						 * @param string  $ob_food_type  output string of food type html
 						 */
 						$ob_food_type = apply_filters('rt_restaurant_food_type_html', $ob_food_type);
 
@@ -173,7 +170,7 @@ if (is_singular('restaurants')) {
 								<td>To</td>
 							</tr>
 							<?php
-							foreach ($current_post_timing[0] as $key => $day) {
+							foreach ($current_post_timing as $key => $day) {
 								?>
 								<tr class='timing_data'>
 									<td> <?php echo $days[$key] ?> </td>
@@ -181,8 +178,8 @@ if (is_singular('restaurants')) {
 										<td colspan='3' class='close'>Close</td>
 										<?php } else {
 										?>
-										<td> <?php echo $current_post_timing[0][$key][0] ?>AM</td>
-										<td> <?php echo $current_post_timing[0][$key][1] ?>PM</td>
+										<td> <?php echo $current_post_timing[$key][0] ?>AM</td>
+										<td> <?php echo $current_post_timing[$key][1] ?>PM</td>
 									<?php } ?>
 								</tr>
 								<?php
@@ -194,15 +191,14 @@ if (is_singular('restaurants')) {
 						$ob_timing = ob_get_clean();
 
 						/**
-						 * Summary.  Filter for changing restaurant time html.
+						 *  Filter for changing restaurant time html.
 						 *
-						 * Description.
 						 *   This filter will allow you to customize the look of restaurant time post meta.
 						 * 
-						 * @since Unknown
+						 * @since 0.1
 						 *
-						 * @param string  $var   Description.  Filter name
-						 * @param string  $ob_timing Description. output string of restaurant timing html
+						 * @param string  $var     Filter name
+						 * @param string  $ob_timing  output string of restaurant timing html
 						 */
 						$ob_timing = apply_filters('rt_restaurant_timing_table_html', $ob_timing);
 
@@ -244,15 +240,14 @@ if (is_singular('restaurants')) {
 					$ob_gallery = ob_get_clean();
 
 					/**
-					 * Summary.  Filter for changing restaurant image gallery html.
+					 * Filter for changing restaurant image gallery html.
 					 *
-					 * Description.
 					 *   This filter will allow you to customize the look of restaurant image gallery.
 					 * 
-					 * @since Unknown
+					 * @since 0.1
 					 *
-					 * @param string  $var   Description.  Filter name
-					 * @param string  $ob_gallery Description. output string of restaurant image gallery html
+					 * @param string  $var     Filter name
+					 * @param string  $ob_gallery  output string of restaurant image gallery html
 					 */
 					$ob_gallery = apply_filters('rt_restaurant_gallery_html', $ob_gallery);
 
