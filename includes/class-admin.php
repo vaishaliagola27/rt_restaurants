@@ -611,9 +611,7 @@ if (!class_exists('Admin')) {
 				$rating += get_comment_meta($cmnts->comment_ID, 'rating', true);
 				$cnt += 1;
 			}
-			$average = intval($rating / $total_comments);
-
-			echo $average;
+			$average = $rating / $total_comments;
 
 			$transient_args = array(
 			    'post_id' => $comment->comment_post_ID,

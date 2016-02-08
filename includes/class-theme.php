@@ -30,6 +30,8 @@ if (!class_exists('Theme')) {
 
 			//template for archive page
 			add_filter('template_include', array($this, 'load_archive_restaurants'));
+			
+			add_filter('comments_template', array($this, 'review_template'));
 		}
 
 		/**
@@ -181,7 +183,7 @@ if (!class_exists('Theme')) {
 				<?php
 				// fetching rating value for review
 				$commentrating = get_comment_meta(get_comment_ID(), 'rating', true);
-				$star_url = \rtCamp\WP\rtRestaurants\PATH . 'assets/images/';
+				$star_url = \rtCamp\WP\rtRestaurants\URL . 'assets/images/';
 				?>
 				<p class="comment-rating" itemprop="reviewRating" itemscope itemtype="http://schema.org/Rating">
 					<img src="<?php echo $star_url . $commentrating . 'star.png'; ?>" />

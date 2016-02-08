@@ -13,7 +13,7 @@ if (post_password_required()) {
 <div id="comments" class="comments-area">
 
 	<?php
-	// You can start editing here -- including this comment!
+	
 	if (have_comments()) :
 		?>
 		<h2 class="comments-title">
@@ -38,9 +38,10 @@ if (post_password_required()) {
 
 		<ol class="comment-list">
 			<?php
+			global $comment;
 			//load comment template
 			$args = array(
-				'callback' => array("Theme", 'reviews_html'),
+				'callback' => array('\rtCamp\WP\rtRestaurants\Theme', 'reviews_html'),
 				'type' => 'comment'
 			);
 			wp_list_comments($args);

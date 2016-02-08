@@ -15,9 +15,9 @@ if (is_singular('restaurants')) {
 			<!-- Display aggregate rating for restaurant  -->
 			<div id="ratting" itemprop="ratingValue">
 				<?php
-				$rating = get_post_meta($post->ID, '_restaurant_ratting', true);
+				$rating = get_post_meta($post->ID, '_average_rating', true);
 				if (!empty($rating) || $rating != NULL) {
-					$star_url = plugin_dir_url(__FILE__) . 'assets/images/';
+					$star_url = \rtCamp\WP\rtRestaurants\URL . 'assets/images/';
 					echo "<img src=\"" . $star_url . intval($rating) . "star.png\" />";
 				}
 				?>
