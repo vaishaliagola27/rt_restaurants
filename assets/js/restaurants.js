@@ -26,7 +26,7 @@ jQuery(document).ready(function () {
 		var geocoder = new google.maps.Geocoder();
 		geocodeAddress(geocoder, map);
 	}
-
+	//Loads address into map
 	function geocodeAddress(geocoder, resultsMap) {
 		var address = document.getElementById('address_value').value;
 		geocoder.geocode({'address': address}, function (results, status) {

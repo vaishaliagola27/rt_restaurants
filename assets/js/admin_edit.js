@@ -1,5 +1,5 @@
 (function ($) {
-
+	//edit post data
 	var $wp_inline_edit = inlineEditPost.edit;
 
 	inlineEditPost.edit = function (id) {
@@ -36,7 +36,7 @@
 
 			//timing table display
 			var $time = $('.column-timing', $post_row).find('span');
-
+			
 			var i = 0, loop = 1;
 			$time.each(function () {
 				var days_key = ["mon", "tue", "wed", "thu", "fri", "sat", "sun"];
@@ -57,18 +57,19 @@
 					}
 
 				}
-				if (loop === 2)
+				if (2 === loop)
 				{
 					$('input[name="time[' + days_key[i] + '][pm]"]', $edit_row).val(val);
 				}
-				if (loop === 2) {
+				//check for loop
+				if (2 === loop) {
 					loop = 0;
 					i++;
 				}
 				loop++;
 			});
 			//if sunday is close day
-			if (i === 6) {
+			if (6 === i) {
 				$('input[name="time[sun][am]"]', $edit_row).val(null);
 				$('input[name="time[sun][pm]"]', $edit_row).val(null);
 			}

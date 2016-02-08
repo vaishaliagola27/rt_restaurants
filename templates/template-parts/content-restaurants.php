@@ -3,7 +3,10 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
+
+//register script of restaurant
 wp_register_script('restaurant-js', get_template_directory_uri() . '/js/restaurants.js');
+
 if (is_singular('restaurants')) {
 	global $post;
 	?>
@@ -44,7 +47,8 @@ if (is_singular('restaurants')) {
 							foreach ($addr as $key) {
 								?>
 								<span itemprop = "<?php echo $key ?>"> <?php echo $current_post_address[$key];
-						$address .= "," . $current_post_address[$key]; ?><br /></span>
+						$address .= "," . $current_post_address[$key];
+								?><br /></span>
 								<?php
 							}
 							?>
@@ -72,7 +76,7 @@ if (is_singular('restaurants')) {
 
 					<!-- Display Contact Number -->
 					<div class="contact">
-						<?php $phone_no = get_post_meta($post->ID, '_restaurant_contactno', true); ?>
+	<?php $phone_no = get_post_meta($post->ID, '_restaurant_contactno', true); ?>
 						<label class="labels">Contact Us:</label>
 						<span itemprop="telephone">
 							<a href="tel://<?php echo $phone_no ?>"><?php echo $phone_no ?></a>
@@ -176,11 +180,11 @@ if (is_singular('restaurants')) {
 									<td> <?php echo $days[$key] ?> </td>
 									<?php if ($day['am'] == NULL && $day['pm'] == NULL) { ?>
 										<td colspan='3' class='close'>Close</td>
-										<?php } else {
+									<?php } else {
 										?>
 										<td> <?php echo $current_post_timing[$key]['am'] ?>AM</td>
 										<td> <?php echo $current_post_timing[$key]['pm'] ?>PM</td>
-									<?php } ?>
+								<?php } ?>
 								</tr>
 								<?php
 							}

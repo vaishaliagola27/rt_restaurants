@@ -5,7 +5,7 @@ namespace rtCamp\WP\rtRestaurants;
 if (!class_exists('Load')) {
 
 	/**
-	 *  This class will load files and data at theme and plugin loading time.
+	 *  Loads all files and data at theme and plugin loading time.
 	 * 
 	 * @author Vaishali Agola <vaishaliagola27@gmail.com>
 	 */
@@ -31,7 +31,7 @@ if (!class_exists('Load')) {
 			/**
 			 * Filter for initilize class objects and call init().
 			 *
-			 *  This filter will allow user to change classes names for creating objects and call init().
+			 * filter  to change classes names for creating objects and call init().
 			 * 
 			 * @since 0.1
 			 *
@@ -44,8 +44,7 @@ if (!class_exists('Load')) {
 				//capitalize first letter of class name
 				$class_uc = ucfirst($class);
 
-				//create class object and call init() of every class
-
+				//Instanciate class and call init() of every class
 				$class_name = "rtCamp\WP\\rtRestaurants\\" . $class_uc;
 				${$class} = new $class_name();
 				${$class}->init();
@@ -53,7 +52,7 @@ if (!class_exists('Load')) {
 		}
 
 		/**
-		 * To flush the rewrite rules for plugin.
+		 * Flushes the rewrite rules.
 		 */
 		public function restaurants_flush_rewrites() {
 			flush_rewrite_rules();
@@ -62,7 +61,7 @@ if (!class_exists('Load')) {
 		/**
 		 * add new post type of restaurants
 		 *
-		 *  This function will add one or more custom post types.
+		 *  add one or more custom post types.
 		 * 
 		 * @since 0.1
 		 */
@@ -115,8 +114,8 @@ if (!class_exists('Load')) {
 			/**
 			 * Filter for add multiple custom post types.
 			 *
-			 * This filter will allow user to add multiple custom post types at once. USer just need to pass
-			 * name and arguments of custom post types.  
+			 *  filter to add multiple custom post types at once. USer just need to pass
+			 *  name and arguments of custom post types.  
 			 * 
 			 * @since 0.1
 			 *
@@ -150,7 +149,7 @@ if (!class_exists('Load')) {
 			/**
 			 * Filter to register more than one taxonomies.
 			 *
-			 * This filter will allow user to register more than 1 taxonomy at a time by giving key and label of each
+			 * filter to register more than 1 taxonomy at a time by giving key and label of each
 			 * taxonomy in array. 
 			 *
 			 * @since 0.1

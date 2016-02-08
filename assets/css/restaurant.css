@@ -75,6 +75,8 @@ and open the template in the editor.
 .main-content >.content .content-left .right{
 	width: 50%;
 }
+
+/* address box css */
 .main-content> .content .content-left .address{
 	height: auto;
 	width: auto;
@@ -97,13 +99,14 @@ and open the template in the editor.
 	font-size: 14px;
 }
 
-
+/* Google Map css*/
 .main-content > .content .content-left .right #map{
 	margin-top: 5%;
 	height: 300px;
 	clear: both; 
 }
 
+/* Restaurant timing css */
 .main-content >.content .content-left .right .timing_table{
 	border:none;
 	width: 140%;
@@ -141,6 +144,8 @@ and open the template in the editor.
 .main-content >.content .content_right .labels{
 	margin-left: 10%;
 }
+
+/* image gallery css */
 .main-content >.content .content_right .image-gallery{
 	width: 90%;
 	max-width: 90%;
@@ -149,7 +154,6 @@ and open the template in the editor.
 	margin:0 0 0 0;
 	clear: both;
 }
-
 .main-content >.content .content_right .image-gallery #gallery-image{
 	height: 300px;
 	vertical-align: middle;
@@ -158,7 +162,6 @@ and open the template in the editor.
 
 
 /* review area css */
-
 #comments{
 	margin-left:10%;
 }
@@ -226,6 +229,7 @@ and open the template in the editor.
 	font-size: 15px;
 }
 
+/* reply box css */
 .comment-body > .reply{
 	margin-top: 5px; 
 }

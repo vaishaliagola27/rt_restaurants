@@ -5,7 +5,7 @@ namespace rtCamp\WP\rtRestaurants;
 if (!class_exists('Theme')) {
 
 	/**
-	 *  This class will make changes into front-end side display.
+	 *  Changes into front-end side display.
 	 * 
 	 * @author Vaishali Agola <vaishaliagola27@gmail.com>
 	 */
@@ -26,11 +26,12 @@ if (!class_exists('Theme')) {
 			add_action('comment_form_after_fields', array($this, 'additional_fields'));
 
 			// add template and call load-template
-			add_filter('template_include', array($this, 'load_template'));
+			add_filter('template_include', array($this, 'load_template_single'));
 
 			//template for archive page
 			add_filter('template_include', array($this, 'load_archive_restaurants'));
 			
+			//filter for comment template
 			add_filter('comments_template', array($this, 'review_template'));
 		}
 
@@ -42,10 +43,11 @@ if (!class_exists('Theme')) {
 		 */
 		public function add_css_js() {
 			$template_directory_uri = \rtCamp\WP\rtRestaurants\URL;
-
+			
+			//Local scripts for admin
 			wp_enqueue_script('jquery');
 			wp_localize_script('jquery', 'ajax_object', admin_url('admin-ajax.php'));
-
+			
 			// Enqueuing styles 
 			wp_enqueue_style("restaurants_css", $template_directory_uri . 'assets/css/restaurant.css');
 			wp_enqueue_style("Slick_css", $template_directory_uri . 'lib/slick/slick/slick.css');
@@ -82,7 +84,7 @@ if (!class_exists('Theme')) {
 			/**
 			 *  Filter for change in default fields of comment
 			 *
-			 *  This filter will help user to change default fields of comment by providing them in array.  
+			 *  filter to change default fields of comment by providing them in array.  
 			 * 
 			 * @since 0.1
 			 *
@@ -97,7 +99,7 @@ if (!class_exists('Theme')) {
 		/**
 		 *  Add field of rating in review
 		 *
-		 *  This function add rating form to Review.
+		 *  Adds rating form to Review.
 		 * 
 		 * @since 0.1
 		 * 
@@ -135,7 +137,7 @@ if (!class_exists('Theme')) {
 		/**
 		 * Display review of restaurants
 		 *
-		 *  This function will display custom review display code for restaurant post type.
+		 *  Displays custom review display code for restaurant post type.
 		 * 
 		 * @since 0.1
 		 * 
@@ -180,11 +182,14 @@ if (!class_exists('Theme')) {
 				<div itemprop="description">
 					<?php echo $review->comment_content; ?>
 				</div>
+					
 				<?php
 				// fetching rating value for review
 				$commentrating = get_comment_meta(get_comment_ID(), 'rating', true);
 				$star_url = \rtCamp\WP\rtRestaurants\URL . 'assets/images/';
+				//Rating display
 				?>
+					
 				<p class="comment-rating" itemprop="reviewRating" itemscope itemtype="http://schema.org/Rating">
 					<img src="<?php echo $star_url . $commentrating . 'star.png'; ?>" />
 					<br/>
@@ -194,6 +199,7 @@ if (!class_exists('Theme')) {
 						/ <span itemprop="bestRating">5</span>
 					</strong>
 				</p>
+				
 				<div class="reply">
 					<?php comment_reply_link(array_merge($args, array('add_below' => $add_below, 'depth' => $depth, 'max_depth' => $args['max_depth']))); ?>
 				</div>
@@ -205,7 +211,7 @@ if (!class_exists('Theme')) {
 			/**
 			 * Allow to change review display
 			 *
-			 *  User can change display of reviews by using this filter. Add output string into $ob_review_all variable.
+			 *  change display of reviews by using this filter. Add output string into $ob_review_all variable.
 			 *
 			 * @since 0.1
 			 *
@@ -217,21 +223,17 @@ if (!class_exists('Theme')) {
 		}
 
 		/**
-		 * loads template 
+		 * loads template for single restaurant page
 		 * 
 		 * @since 0.1
 		 * 
 		 * @param array $template array of file paths
 		 * 
 		 */
-		public function load_template($template) {
+		public function load_template_single($template) {
+			//check post type
 			if (is_singular('restaurants')) {
-				$path = explode("/", $template);
-				$path = array_reverse($path);
-				if (strcmp($path[0], "single.php") === 0) {
-					$path_template = \rtCamp\WP\rtRestaurants\PATH . 'templates/single-restaurants.php';
-					$template = $path_template;
-				}
+				$template = $this->load_template($template,"single");
 			}
 			return $template;
 		}
@@ -246,13 +248,31 @@ if (!class_exists('Theme')) {
 		 */
 		public function load_archive_restaurants($template) {
 			if (is_post_type_archive('restaurants')) {
-				$path = explode("/", $template);
-				$path = array_reverse($path);
+				$template = $this->load_template($template,"archive");
+			}
+			return $template;
+		}
 
-				if (strcmp($path[0], "archive.php") === 0) {
-					$path_template = \rtCamp\WP\rtRestaurants\PATH . 'templates/archive-restaurants.php';
-					$template = $path_template;
-				}
+		/**
+		 * Loads perticular template of $type 
+		 * 
+		 * @since 0.1
+		 * 
+		 * @param array $template
+		 * @param string $type
+		 * @return array
+		 */
+		public function load_template($template, $type) {
+			//convert string into array
+			$path = explode("/", $template);
+			
+			//reverse array
+			$path = array_reverse($path);
+
+			//compare file name
+			if (strcmp($path[0], $type . ".php") === 0) {
+				$path_template = \rtCamp\WP\rtRestaurants\PATH . 'templates/' . $type . '-restaurants.php';
+				$template = $path_template;
 			}
 			return $template;
 		}
