@@ -23,11 +23,14 @@ and open the template in the editor.
 	border-radius: 5px 5px 0 0;
 }
 
+/* All titles of content */
 .labels{
 	color:#1194A0;
 	font-size:20px;
 	margin-bottom: -0.2%;
 }
+
+/* Title of restaurant */
 .main-content >header{
 	display: flex;
 	position: relative;
@@ -41,11 +44,15 @@ and open the template in the editor.
 	font-size: 30px;
 	color: #128791;
 }
+
+/* rating */
 .main-content >header #ratting img{
 	margin: 15px;
 	height: 25%;
 	width: auto;
 }
+
+/* Restaurant details */
 .main-content >.content{
 	display: inline-block;
 	position: relative;
@@ -103,17 +110,17 @@ and open the template in the editor.
 	font-size: 12px;
 }
 
-.timing_table tr td{
-	border:none;
-	margin: auto;
-}
-
 .timing_table #timing_title{
 	font-weight: 28px;
 	border-bottom-style:ridge;
 	border-color: #128791;
 	color: #128791;
 	font-size:16px;
+}
+
+.timing_table tr td{
+	border:none;
+	margin: auto;
 }
 
 .timing_table .timing_data{

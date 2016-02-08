@@ -58,7 +58,7 @@ if (!class_exists('Admin')) {
 			//quick edit for new columns
 			add_action('quick_edit_custom_box', array($this, 'display_custom_quickedit_restaurant'), 10, 2);
 
-			//
+			//add script admin_edit
 			add_action('admin_enqueue_scripts', array($this, 'wp_admin_enqueue_scripts'));
 		}
 
@@ -88,6 +88,7 @@ if (!class_exists('Admin')) {
 			// output buffer start
 			ob_start();
 			wp_nonce_field('rt_restaurant_address_nonce', 'restaurant_address_nonce', false);
+			
 			// Array for address fields
 			$addr = array("streetAddress" => "Street Address", "addressLocality" => "Locality", "addressRegion" => "Region", "postalCode" => "Postal Code", "addressCountry" => "Country");
 
@@ -147,7 +148,7 @@ if (!class_exists('Admin')) {
 		 * @var array   $address    address of restaurant
 		 */
 		public function save_address($post_id) {
-
+			//check for empty post id
 			if (empty($post_id)) {
 				$post_id = $_POST['post_ID'];
 			}
@@ -156,6 +157,7 @@ if (!class_exists('Admin')) {
 				return;
 			}
 
+			//verify nonce
 			$address_nonce = !empty($_POST['restaurant_address_nonce']) ? $_POST['restaurant_address_nonce'] : '';
 
 			if (empty($address_nonce)) {
@@ -170,6 +172,7 @@ if (!class_exists('Admin')) {
 				return;
 			}
 
+			//sanitize address values
 			foreach ($address as $key => $value) {
 				$address[$key] = sanitize_text_field($value);
 			}
@@ -189,6 +192,7 @@ if (!class_exists('Admin')) {
 		 * @var int $contactno  contact number of restaurant
 		 */
 		public function save_contactno($post_id) {
+			//check for empty post id
 			if (empty($post_id)) {
 				$post_id = $_POST['post_ID'];
 			}
@@ -197,6 +201,7 @@ if (!class_exists('Admin')) {
 				return;
 			}
 
+			//verify nonce 
 			$contactno_nonce = !empty($_POST['restaurant_contactno_nonce']) ? $_POST['restaurant_contactno_nonce'] : '';
 
 			if (empty($contactno_nonce)) {
@@ -211,6 +216,7 @@ if (!class_exists('Admin')) {
 			if (empty($contact_no)) {
 				return;
 			}
+			//sanitize contact number data
 			$contact_no = sanitize_text_field($contact_no);
 			
 			update_post_meta($post_id, '_restaurant_contactno', $contact_no);
@@ -330,18 +336,18 @@ if (!class_exists('Admin')) {
 
 				// Check if time is not already set for restaurant
 				if (!empty($time) && is_array($time)) {
-					if ($time[$key][0] != NULL) {
-						$am = $time[$key][0];
+					if ($time[$key]['am'] != NULL) {
+						$am = $time[$key]['am'];
 					}
-					if ($time[$key][1] != NULL) {
-						$pm = $time[$key][1];
+					if ($time[$key]['am'] != NULL) {
+						$pm = $time[$key]['pm'];
 					}
 				}
 				?>
 						<tr>
 							<td name=" <?php echo $day ?> "> <?php echo $day ?> </td>
-							<td><input type="text" name="<?php echo "time[" . $key . "][]"; ?>" size="3" value="<?php echo $am; ?>">AM</td>
-							<td><input type="text" name="<?php echo "time[" . $key . "][]"; ?>" size="3" value="<?php echo $pm; ?>">PM</td>
+							<td><input type="text" name="<?php echo "time[" . $key . "][am]"; ?>" size="3" value="<?php echo $am; ?>">AM</td>
+							<td><input type="text" name="<?php echo "time[" . $key . "][pm]"; ?>" size="3" value="<?php echo $pm; ?>">PM</td>
 						</tr>
 				<?php
 			}
@@ -376,6 +382,7 @@ if (!class_exists('Admin')) {
 				 * @param int $post_id
 				 */
 				public function save_timing($post_id) {
+					//check for empty post id
 					if (empty($post_id)) {
 						$post_id = $_POST['post_ID'];
 					}
@@ -384,6 +391,7 @@ if (!class_exists('Admin')) {
 						return;
 					}
 
+					//verify nonce
 					$timing_nonce = !empty($_POST['restaurant_timing_nonce']) ? $_POST['restaurant_timing_nonce'] : '';
 
 					if (empty($timing_nonce)) {
@@ -404,7 +412,7 @@ if (!class_exists('Admin')) {
 					$close_days = array();
 					$i = 0;
 					foreach ($time as $key => $day) {
-						if ($day[0] == '' && $day[1] == '') {
+						if ($day['am'] == '' && $day['pm'] == '') {
 							$close_days[$i++] = ($key);
 						}
 					}
@@ -506,24 +514,24 @@ if (!class_exists('Admin')) {
 				}
 
 				/**
-				 * Edit comment meta box. 
-				 * 
-				 * This function will extend comment of custom post type restaurants.
-				 *  
-				 * @since 0.1
-				 * 
-				 * @param array $comment
-				 * 
-				 */
-				public function extend_comment_meta_box($comment) {
-					// Output buffer starts
-					ob_start();
-					$rating = get_comment_meta($comment->comment_ID, 'rating', true);
-					wp_nonce_field('rt_extend_comment_update', 'extend_comment_update', false);
-					?>
-			<p>
-				<label for="rating"><?php _e('Rating: '); ?></label>
-				<span class="commentratingbox">
+		 * Edit comment meta box. 
+		 * 
+		 * This function will extend comment of custom post type restaurants.
+		 *  
+		 * @since 0.1
+		 * 
+		 * @param array $comment
+		 * 
+		 */
+		public function extend_comment_meta_box($comment) {
+			// Output buffer starts
+			ob_start();
+			$rating = get_comment_meta($comment->comment_ID, 'rating', true);
+			wp_nonce_field('rt_extend_comment_update', 'extend_comment_update', false);
+			?>
+				<p>
+					<label for="rating"><?php _e('Rating: '); ?></label>
+					<span class="commentratingbox">
 			<?php
 			for ($i = 1; $i <= 5; $i++) {
 				echo '<span class="commentrating"><input type="radio" name="rating" id="rating" value="' . $i . '"';
@@ -532,8 +540,8 @@ if (!class_exists('Admin')) {
 				echo ' />' . $i . ' </span>';
 			}
 			?>
-				</span>
-			</p>
+					</span>
+				</p>
 			<?php
 			// Store output buffer value into variable and clean it.
 			$ob_rating_display_edit = ob_get_clean();
@@ -667,12 +675,12 @@ if (!class_exists('Admin')) {
 					foreach ($current_post_timing as $key => $day) {
 						?>
 						<p> <?php echo $days[$key] ?> </p>
-						<?php if ($day[0] == NULL && $day[1] == NULL) { ?>
+						<?php if ($day['am'] == NULL && $day['pm'] == NULL) { ?>
 							<p>Close</p>
 						<?php } else {
 							?>
-							<?php echo "<span id='".$key."-am'>".$current_post_timing[$key][0]."</span>" ?>AM To 
-							<?php echo "<span id='".$key."-pm'>".$current_post_timing[$key][1]."</span>" ?>PM
+							<?php echo "<span id='".$key."-am'>".$current_post_timing[$key]['am']."</span>" ?>AM To 
+							<?php echo "<span id='".$key."-pm'>".$current_post_timing[$key]['pm']."</span>" ?>PM
 							<?php
 						}
 					}
@@ -725,8 +733,10 @@ if (!class_exists('Admin')) {
 		}
 
 		/**
+		 * add script for admin quick edit
 		 * 
-		 * @param type $hook
+		 * @since 0.1
+		 * @param array $hook
 		 */
 		public function wp_admin_enqueue_scripts( $hook ) {
 			if ('edit.php' === $hook &&

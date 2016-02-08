@@ -174,12 +174,12 @@ if (is_singular('restaurants')) {
 								?>
 								<tr class='timing_data'>
 									<td> <?php echo $days[$key] ?> </td>
-									<?php if ($day[0] == NULL && $day[1] == NULL) { ?>
+									<?php if ($day['am'] == NULL && $day['pm'] == NULL) { ?>
 										<td colspan='3' class='close'>Close</td>
 										<?php } else {
 										?>
-										<td> <?php echo $current_post_timing[$key][0] ?>AM</td>
-										<td> <?php echo $current_post_timing[$key][1] ?>PM</td>
+										<td> <?php echo $current_post_timing[$key]['am'] ?>AM</td>
+										<td> <?php echo $current_post_timing[$key]['pm'] ?>PM</td>
 									<?php } ?>
 								</tr>
 								<?php
