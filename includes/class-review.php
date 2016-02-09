@@ -5,8 +5,8 @@ namespace rtCamp\WP\rtRestaurants;
 if ( !class_exists( 'Admin' ) ) {
 
 	/**
-	 *  Review and rating 
-	 * 
+	 *  Review and rating
+	 *
 	 * @author Vaishali Agola <vaishaliagola27@gmail.com>
 	 */
 	class Review {
@@ -42,25 +42,25 @@ if ( !class_exists( 'Admin' ) ) {
 		 *  add fields to review.
 		 *
 		 *  Function to add custom fields in comment of custom post.
-		 * 
+		 *
 		 * @since 0.1
-		 * 
+		 *
 		 */
 		public function custom_fields() {
 
 			$commenter = wp_get_current_commenter();
 			$req = get_option( 'require_name_email' );
 			$aria_req = ( $req ? " aria-required='true'" : '' );
-			//Add custom fields 
+			//Add custom fields
 			$fields[ 'author' ] = require \rtCamp\WP\rtRestaurants\PATH . 'includes/views/review-form-auther.php';
 
 			$fields[ 'email' ] = require \rtCamp\WP\rtRestaurants\PATH . 'includes/views/review-form-email.php';
 
 			/**
 			 *  filter for custom fields of comment
-			 *   
+			 *
 			 *  filter to add custom fields in comment of custom post
-			 * 
+			 *
 			 * @since 0.1
 			 *
 			 * @param string  $var    name of filter
@@ -74,17 +74,27 @@ if ( !class_exists( 'Admin' ) ) {
 		/**
 		 *  Add amd Save the comment meta rating along with comment
 		 *
-		 *  add comment meta rating and save to comment. 
-		 * 
+		 *  add comment meta rating and save to comment.
+		 *
 		 * @since 0.1
-		 * 
+		 *
 		 * @param int $comment_id
-		 * 
+		 *
 		 */
 		public function save_comment_meta_data( $comment_id ) {
 			//check for rating value
 			if ( ( isset( $_POST[ 'rating' ] ) ) && ( $_POST[ 'rating' ] != '') )
 				$rating = wp_filter_nohtml_kses( $_POST[ 'rating' ] );
+
+			/**
+			 *  Filter to change rating value
+			 *
+			 * @since 0.1
+			 *
+			 * @param string $var    Name of filter
+			 * @param array  $address
+			 */
+			$rating = apply_filters( 'rt_restaurant_save_address', $rating );
 
 			//Add or update rating
 			add_comment_meta( $comment_id, 'rating', $rating );
@@ -94,10 +104,10 @@ if ( !class_exists( 'Admin' ) ) {
 
 		/**
 		 * To check that rating is given or not
-		 *  
+		 *
 		 * This function will check if reviwer has also give rating to restaurant.
 		 * @since 0.1
-		 * 
+		 *
 		 * @param array commentdata
 		 */
 		public function verify_comment_meta_data( $commentdata ) {
@@ -109,7 +119,7 @@ if ( !class_exists( 'Admin' ) ) {
 
 		/**
 		 * Add an comment meta box of rating
-		 *  
+		 *
 		 * Add comment meta box for rating of restaurant.
 		 *
 		 * @since 0.1
@@ -122,14 +132,14 @@ if ( !class_exists( 'Admin' ) ) {
 		}
 
 		/**
-		 * Edit comment meta box. 
-		 * 
+		 * Edit comment meta box.
+		 *
 		 * This function will extend comment of custom post type restaurants.
-		 *  
+		 *
 		 * @since 0.1
-		 * 
+		 *
 		 * @param array $comment
-		 * 
+		 *
 		 */
 		public function extend_comment_meta_box( $comment, $args ) {
 
@@ -139,7 +149,7 @@ if ( !class_exists( 'Admin' ) ) {
 			//nonce field
 			wp_nonce_field( 'rt_extend_comment_update', 'extend_comment_update', false );
 
-			//includes restaurant timing html 
+			//includes restaurant timing html
 			require \rtCamp\WP\rtRestaurants\PATH . 'includes/views/review.php';
 
 			// Store output buffer value into variable and clean it.
@@ -147,27 +157,27 @@ if ( !class_exists( 'Admin' ) ) {
 
 			/**
 			 *  change display of rating
-			 *  
+			 *
 			 *  change display of rating by this filter. output will store in $ob_rating_display_edit variable.
 			 *
 			 * @since 0.1
 			 *
 			 * @param string  $var .
-			 * @param string $ob_rating_display_edit 
+			 * @param string $ob_rating_display_edit
 			 */
 			$ob_rating_display_edit = apply_filters( 'rt_restaurant_rating_display_edit_html', $ob_rating_display_edit );
 			echo $ob_rating_display_edit;
 		}
 
 		/**
-		 * Update comment meta data from comment editing screen 
-		 *  
+		 * Update comment meta data from comment editing screen
+		 *
 		 * add or update new comment.
-		 * 
+		 *
 		 * @since 0.1
 		 *
 		 * @param int $comment_id
-		 * 
+		 *
 		 */
 		public function extend_comment_edit_metafields( $comment_id ) {
 
@@ -186,13 +196,13 @@ if ( !class_exists( 'Admin' ) ) {
 		/**
 		 *  Set transient to store ratting and postmeta to store average
 		 *
-		 *  create transient to store ratting total and total count of comment. It also create or update 
+		 *  create transient to store ratting total and total count of comment. It also create or update
 		 *  restaurant_ratting post meta.
-		 * 
+		 *
 		 * @since 0.1
-		 * 
+		 *
 		 * @param int $comment_id	Current comment id
-		 * 
+		 *
 		 */
 		public function add_transient_rating( $comment_id ) {
 			$comment = get_comment( $comment_id );
@@ -229,9 +239,9 @@ if ( !class_exists( 'Admin' ) ) {
 		 *  Review field add, save review and display review
 		 *
 		 *  Function to change default fields of comment by providing them in array.
-		 * 
+		 *
 		 * @since 0.1
-		 * 
+		 *
 		 * @var array   $default    default fields of review
 		 */
 		public function default_fields() {
@@ -243,8 +253,8 @@ if ( !class_exists( 'Admin' ) ) {
 			/**
 			 *  Filter for change in default fields of comment
 			 *
-			 *  filter to change default fields of comment by providing them in array.  
-			 * 
+			 *  filter to change default fields of comment by providing them in array.
+			 *
 			 * @since 0.1
 			 *
 			 * @param string  $var     name of filter
@@ -259,9 +269,9 @@ if ( !class_exists( 'Admin' ) ) {
 		 *  Add field of rating in review
 		 *
 		 *  Adds rating form to Review.
-		 * 
+		 *
 		 * @since 0.1
-		 * 
+		 *
 		 * @var string  $ob_rating  output buffer value
 		 */
 		public function additional_fields() {
@@ -276,7 +286,7 @@ if ( !class_exists( 'Admin' ) ) {
 				 *  change html of additional fields.
 				 *
 				 *  This filter will help user to change in display of additional fields of comments
-				 * 
+				 *
 				 * @since 0.1
 				 *
 				 * @param string $var name of the filter
@@ -291,9 +301,9 @@ if ( !class_exists( 'Admin' ) ) {
 		 * Display review of restaurants
 		 *
 		 *  Displays custom review display code for restaurant post type.
-		 * 
+		 *
 		 * @since 0.1
-		 * 
+		 *
 		 * @param array $review Array of comments
 		 * @param string $args
 		 * @param int $depth
@@ -306,11 +316,11 @@ if ( !class_exists( 'Admin' ) ) {
 
 		/**
 		 * add custom template for comment
-		 * 
+		 *
 		 * @since 0.1
-		 * 
+		 *
 		 * @param string $theme_template
-		 * 
+		 *
 		 */
 		public function review_template( $theme_template ) {
 			if ( is_singular( 'restaurants' ) ) {

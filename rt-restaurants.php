@@ -1,4 +1,5 @@
 <?php
+
 /*
   Plugin Name: rtRestaurants
   Plugin URI:  http://rtcamp.com
@@ -12,15 +13,15 @@
   Text Domain: rt-restaurants
  */
 // Custom code starts here
-
 //namespace declaration
+
 namespace rtCamp\WP\rtRestaurants;
 
 //define constant for plugin directory path
-define('rtCamp\WP\rtRestaurants\PATH', plugin_dir_path(__FILE__));
+define( 'rtCamp\WP\rtRestaurants\PATH', plugin_dir_path( __FILE__ ) );
 
 //define constant for plugin directory url
-define('rtCamp\WP\rtRestaurants\URL' , plugin_dir_url(__FILE__));
+define( 'rtCamp\WP\rtRestaurants\URL', plugin_dir_url( __FILE__ ) );
 
 //include classes
 require_once \rtCamp\WP\rtRestaurants\PATH . 'includes/class-load.php';
