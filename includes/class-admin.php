@@ -5,7 +5,7 @@ namespace rtCamp\WP\rtRestaurants;
 if (!class_exists('Admin')) {
 
 	/**
-	 *  This class will allow change in front-end/Admin side.
+	 *  Allow change in front-end/Admin side.
 	 * 
 	 * @author Vaishali Agola <vaishaliagola27@gmail.com>
 	 */
@@ -27,28 +27,6 @@ if (!class_exists('Admin')) {
 
 			//save timing meta box 
 			add_action('save_post', array($this, 'save_timing'));
-
-			//add comment/review default fields
-			add_filter('comment_form_default_fields', array($this, 'custom_fields'));
-
-			//action to store review meta data
-			add_action('comment_post', array($this, 'save_comment_meta_data'));
-
-			//filter added for verify review details
-			add_filter('preprocess_comment', array($this, 'verify_comment_meta_data'));
-
-			//action which extends review meta box for rating
-			add_action('add_meta_boxes_comment', array($this, 'extend_comment_add_meta_box'));
-
-			//action for edit meta fields
-			add_action('edit_comment', array($this, 'extend_comment_edit_metafields'));
-
-			/**
-			 * photo gallery code for thumbnails
-			 */
-			add_theme_support('post-thumbnails', array('restaurants'));
-			set_post_thumbnail_size(50, 50);
-			add_image_size('single-post-thumbnail', 400, 9999);
 
 			//for display column in list
 			add_filter('manage_restaurants_posts_columns', array($this, 'add_restaurants_columns'));
@@ -134,30 +112,10 @@ if (!class_exists('Admin')) {
 
 			// Retriving address post meta for particular post.
 			$add = get_post_meta($post->ID, '_restaurant_address', true);
-			?>
-			<table class="address_table">
-				<?php
-				//display address values into it's fields
-				foreach ($addr as $key => $value) {
-					if ($add != NULL && !empty($add)) {
-						$value = $add[$key];
-					} else {
-						$value = '';
-					}
-					?>
-					<tr>
-						<td>
-							<label> <?php echo $addr[$key]; ?></label>
-						</td>
-						<td>
-							<input size="15" type="text" name="<?php echo "restaurant_add[" . $key . "]"; ?>" value="<?php echo empty($value) ? ' ' : $value; ?>" />
-						</td> 
-					</tr>
-					<?php
-				}
-				?>
-			</table>
-			<?php
+			
+			//includes address html 
+			require \rtCamp\WP\rtRestaurants\PATH . 'includes/views/address.php';
+			
 			// Get output buffer value into variable and clear output buffer
 			$ob_address = ob_get_clean();
 
@@ -294,9 +252,10 @@ if (!class_exists('Admin')) {
 			if ($val != NULL && !empty($val)) {
 				$restaurant_contact = $val;
 			} 
-			?>
-			<input type='text' id='contact-no' value='<?php echo $restaurant_contact?>' name='restaurant_contact_no' />
-			<?php
+			
+			//includes contact number html 
+			require \rtCamp\WP\rtRestaurants\PATH . 'includes/views/contactno.php';
+			
 			// Storing output buffer value into variable and clean output buffer.
 			$ob_contactno = ob_get_clean();
 
@@ -344,48 +303,10 @@ if (!class_exists('Admin')) {
 		public function display_timing($post) {
 			// Output buffer starts
 			ob_start();
-			?>
-			<form name="restaurant_timing" method="post">
-				<?php
-				//nonce field for timing 
-				wp_nonce_field('rt_restaurant_timing_nonce', 'restaurant_timing_nonce', false);
-				?>
-
-				<table style="font-size: 12px;margin:auto">
-					<tr style="text-align: center;font-size: 12px; font-weight: bold">
-						<td>Day</td>
-						<td>From</td>
-						<td>To</td>
-					</tr>
-					<?php
-					//Get data if available for current post
-					$time = get_post_meta($post->ID, '_timing', true);
-
-					$days = array("mon" => "Monday", "tue" => "Tuesday", "wed" => "Wednesday", "thu" => "Thursday", "fri" => "Friday", "sat" => "Saturday", "sun" => "Sunday");
-					foreach ($days as $key => $day) {
-						$am = $pm = NULL;
-
-						// Check if time is not already set for restaurant
-						if (!empty($time) && is_array($time)) {
-							if ($time[$key]['am'] != NULL) {
-								$am = $time[$key]['am'];
-							}
-							if ($time[$key]['am'] != NULL) {
-								$pm = $time[$key]['pm'];
-							}
-						}
-						?>
-						<tr>
-							<td name=" <?php echo $day ?> "> <?php echo $day ?> </td>
-							<td><input type="text" name="<?php echo "time[" . $key . "][am]"; ?>" size="3" value="<?php echo $am; ?>">AM</td>
-							<td><input type="text" name="<?php echo "time[" . $key . "][pm]"; ?>" size="3" value="<?php echo $pm; ?>">PM</td>
-						</tr>
-						<?php
-					}
-					?>
-				</table>
-			</form>
-			<?php
+			
+			//includes restaurant timing html 
+			require \rtCamp\WP\rtRestaurants\PATH . 'includes/views/timing.php';
+			
 			// Storing output buffer data into variable
 			$ob_timing_working_days = ob_get_clean();
 
@@ -465,210 +386,7 @@ if (!class_exists('Admin')) {
 			update_post_meta($post_id, '_close_days', $close_days);
 		}
 
-		/**
-		 *  add fields to review.
-		 *
-		 *  Function to add custom fields in comment of custom post.
-		 * 
-		 * @since 0.1
-		 * 
-		 */
-		public function custom_fields() {
-			$commenter = wp_get_current_commenter();
-			$req = get_option('require_name_email');
-			$aria_req = ( $req ? " aria-required='true'" : '' );
-			//Add custom fields 
-			$fields['author'] = '<p class="comment-form-author">' .
-				'<label for="author">' . __('Name') . '</label>' .
-				( $req ? '<span class="required">*</span>' : '' ) .
-				'<input id="author" name="author" type="text" value="' . esc_attr($commenter['comment_author']) .
-				'" size="30" ' . $aria_req . ' /></p>';
-
-			$fields['email'] = '<p class="comment-form-email">' .
-				'<label for="email">' . __('Email') . '</label>' .
-				( $req ? '<span class="required">*</span>' : '' ) .
-				'<input id="email" name="email" type="text" value="' . esc_attr($commenter['comment_author_email']) .
-				'" size="30" ' . $aria_req . ' /></p>';
-
-			/**
-			 *  filter for custom fields of comment
-			 *   
-			 *  filter to add custom fields in comment of custom post
-			 * 
-			 * @since 0.1
-			 *
-			 * @param string  $var    name of filter
-			 * @param array $fields    array of custom fields for comment
-			 */
-			$fields = apply_filters('rt_restaurant_custom_comment_fields', $fields);
-
-			return $fields;
-		}
-
-		/**
-		 *  Add amd Save the comment meta rating along with comment
-		 *
-		 *  add comment meta rating and save to comment. 
-		 * 
-		 * @since 0.1
-		 * 
-		 * @param int $comment_id
-		 * 
-		 */
-		public function save_comment_meta_data($comment_id) {
-			//check for rating value
-			if (( isset($_POST['rating']) ) && ( $_POST['rating'] != ''))
-				$rating = wp_filter_nohtml_kses($_POST['rating']);
-
-			//Add or update rating
-			add_comment_meta($comment_id, 'rating', $rating);
-
-			$this->add_transient_rating($comment_id);
-		}
-
-		/**
-		 * To check that rating is given or not
-		 *  
-		 * This function will check if reviwer has also give rating to restaurant.
-		 * @since 0.1
-		 * 
-		 * @param array commentdata
-		 */
-		public function verify_comment_meta_data($commentdata) {
-			if (!isset($_POST['rating']))
-				wp_die(__('Error: You did not add a rating. Hit the Back button on your Web browser and resubmit your comment with a rating.'));
-			return $commentdata;
-		}
-
-		/**
-		 * Add an comment meta box of rating
-		 *  
-		 * Add comment meta box for rating of restaurant.
-		 *
-		 * @since 0.1
-		 */
-		public function extend_comment_add_meta_box() {
-			add_meta_box('title', __('Comment Metadata - Extend Comment'), array($this, 'extend_comment_meta_box'), 'comment', 'normal', 'high');
-		}
-
-		/**
-		 * Edit comment meta box. 
-		 * 
-		 * This function will extend comment of custom post type restaurants.
-		 *  
-		 * @since 0.1
-		 * 
-		 * @param array $comment
-		 * 
-		 */
-		public function extend_comment_meta_box($comment) {
-			// Output buffer starts
-			ob_start();
-			$rating = get_comment_meta($comment->comment_ID, 'rating', true);
-			//nonce field
-			wp_nonce_field('rt_extend_comment_update', 'extend_comment_update', false);
-			?>
-			<p>
-				<label for="rating"><?php _e('Rating: '); ?></label>
-				<span class="commentratingbox">
-					<?php
-					for ($i = 1; $i <= 5; $i++) {
-						?>
-						<span class="commentrating">
-							<input type="radio" name="rating" id="rating" value="<?php echo $i?>"
-						<?php
-						if ($rating == $i)
-							echo ' checked="checked"';
-						?>
-						/><?php echo $i?> </span>
-						<?php
-					}
-					?>
-				</span>
-			</p>
-			<?php
-			// Store output buffer value into variable and clean it.
-			$ob_rating_display_edit = ob_get_clean();
-
-			/**
-			 *  change display of rating
-			 *  
-			 *  change display of rating by this filter. output will store in $ob_rating_display_edit variable.
-			 *
-			 * @since 0.1
-			 *
-			 * @param string  $var .
-			 * @param string $ob_rating_display_edit 
-			 */
-			$ob_rating_display_edit = apply_filters('rt_restaurant_rating_display_edit_html', $ob_rating_display_edit);
-			echo $ob_rating_display_edit;
-		}
-
-		/**
-		 * Update comment meta data from comment editing screen 
-		 *  
-		 * add or update new comment.
-		 * 
-		 * @since 0.1
-		 *
-		 * @param int $comment_id
-		 * 
-		 */
-		public function extend_comment_edit_metafields($comment_id) {
-			if (!isset($_POST['extend_comment_update']) || !wp_verify_nonce($_POST['extend_comment_update'], 'rt_extend_comment_update'))
-				return;
-
-			if (( isset($_POST['rating']) ) && ( $_POST['rating'] != '')):
-				$rating = wp_filter_nohtml_kses($_POST['rating']);
-				update_comment_meta($comment_id, 'rating', $rating);
-			else :
-				delete_comment_meta($comment_id, 'rating');
-			endif;
-			$this->add_transient_rating($comment_id);
-		}
-
-		/**
-		 *  Set transient to store ratting and postmeta to store average
-		 *
-		 *  create transient to store ratting total and total count of comment. It also create or update 
-		 *  restaurant_ratting post meta.
-		 * 
-		 * @since 0.1
-		 * 
-		 * @param int $comment_id	Current comment id
-		 * 
-		 */
-		public function add_transient_rating($comment_id) {
-			$comment = get_comment($comment_id);
-
-			$total_comments = get_comments_number($comment->comment_post_ID);
-			$args = array(
-			    'post_id' => $comment->comment_post_ID
-			);
-
-			// Retrives all comments for current post
-			$comments = get_comments($args);
-			$rating = 0;
-			$cnt = 0;
-			foreach ($comments as $cmnts) {
-				//retrieves rating from each comment and adds it to the $total_rating
-				$rating += get_comment_meta($cmnts->comment_ID, 'rating', true);
-				$cnt += 1;
-			}
-			$average = $rating / $total_comments;
-
-			$transient_args = array(
-			    'post_id' => $comment->comment_post_ID,
-			    'count' => $total_comments,
-			    'rating' => $rating
-			);
-			//add or update transient
-			set_transient('average_rating', $transient_args);
-
-			// Post meta for average rating
-			update_post_meta($comment->comment_post_ID, '_average_rating', $average);
-		}
-
+		
 		/**
 		 *  Add columns in display of all restaurants
 		 * 
@@ -708,31 +426,17 @@ if (!class_exists('Admin')) {
 					if (empty($address)) {
 						echo "Unknown";
 					} else {
-
-						foreach ($address as $key => $val) {
-							?>
-							<span itemprop="<?php echo $key?>"> <?php echo $val?>
-							</span>
-							<?php
-						}
+						//includes restaurant address column
+						require \rtCamp\WP\rtRestaurants\PATH . 'includes/views/address-column.php';
 					}
 					break;
 				case 'timing' :
 					$current_post_timing = get_post_meta($post->ID, '_timing', true);
 					$days = array("mon" => "Monday", "tue" => "Tuesday", "wed" => "Wednesday", "thu" => "Thursday", "fri" => "Friday", "sat" => "Saturday", "sun" => "Sunday");
-					foreach ($current_post_timing as $key => $day) {
-						?>
-						<p> <?php echo $days[$key] ?> </p>
-						<?php if ($day['am'] == NULL && $day['pm'] == NULL) { ?>
-							<p>Close</p>
-						<?php } else {
-							?>
-							<?php echo "<span id='" . $key . "-am'>" . $current_post_timing[$key]['am'] . "</span>" ?>AM To 
-							<?php echo "<span id='" . $key . "-pm'>" . $current_post_timing[$key]['pm'] . "</span>" ?>PM
-							<?php
-						}
-					}
-
+						
+					//includes restaurant timing html 
+					require \rtCamp\WP\rtRestaurants\PATH . 'includes/views/timing-column.php';
+					
 					break;
 				case 'contactno' :
 					$contact = get_post_meta($post_id, '_restaurant_contactno', true);
@@ -760,26 +464,18 @@ if (!class_exists('Admin')) {
 			//display post meta into quick edit
 			switch ($column_name) {
 				case 'address' :
-					?>
-					<label>Address</label>
-					<?php
+					echo "Address\n";
 					echo $this->display_address($post);
 					break;
 
 				case 'timing' :
-					?>
-					<div style="float:left;">
-					<br /><br /><label>Restaurant Timing</label>
-					<?php $this->display_timing($post); ?>
-					</div>
-					<?php
+					echo "Restaurant Timing\n";
+					echo $this->display_timing($post);					
 					break;
 
 				case 'contactno' :
-					?>
-					<label>Contact Number</label>
-					<?php
-					$this->display_contactno($post);
+					echo "Contact No.\n";
+					echo $this->display_contactno($post);
 					break;
 
 				default:

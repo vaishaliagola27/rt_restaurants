@@ -35,7 +35,7 @@ if (!class_exists('Load')) {
 		public function classes_init(){
 			
 			// create other classes' objects and call init() 
-			$class_names = array('theme', 'admin');
+			$class_names = array('theme', 'admin', 'review');
 
 			foreach ($class_names as $class) {
 				//capitalize first letter of class name

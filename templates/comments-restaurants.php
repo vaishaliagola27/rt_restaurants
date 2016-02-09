@@ -41,7 +41,7 @@ if (post_password_required()) {
 			global $comment;
 			//load comment template
 			$args = array(
-				'callback' => array('\rtCamp\WP\rtRestaurants\Theme', 'reviews_html'),
+				'callback' => array('\rtCamp\WP\rtRestaurants\Review', 'reviews_html'),
 				'type' => 'comment'
 			);
 			wp_list_comments($args);

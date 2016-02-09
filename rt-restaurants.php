@@ -26,6 +26,7 @@ define('rtCamp\WP\rtRestaurants\URL' , plugin_dir_url(__FILE__));
 require_once \rtCamp\WP\rtRestaurants\PATH . 'includes/class-load.php';
 require_once \rtCamp\WP\rtRestaurants\PATH . 'includes/class-theme.php';
 require_once \rtCamp\WP\rtRestaurants\PATH . 'includes/class-admin.php';
+require_once \rtCamp\WP\rtRestaurants\PATH . 'includes/class-review.php';
 
 //instanciate class Load and call init()
 $load_data = new Load();
