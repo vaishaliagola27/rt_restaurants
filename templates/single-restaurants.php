@@ -11,6 +11,8 @@ get_header();
 			//load content of restaurant
 			include_once \rtCamp\WP\rtRestaurants\PATH . "/templates/template-parts/content-restaurants.php";
 
+			do_action('rt_restaurants_add_fields');
+			
 			// Previous/next post navigation.
 			the_post_navigation();
 

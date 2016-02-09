@@ -2,7 +2,7 @@
 
 namespace rtCamp\WP\rtRestaurants;
 
-if (!class_exists('Admin')) {
+if ( !class_exists( 'Admin' ) ) {
 
 	/**
 	 *  Review and rating 
@@ -13,29 +13,29 @@ if (!class_exists('Admin')) {
 
 		public function init() {
 			//add comment/review default fields
-			add_filter('comment_form_default_fields', array($this, 'custom_fields'));
+			add_filter( 'comment_form_default_fields', array( $this, 'custom_fields' ) );
 
 			//action to store review meta data
-			add_action('comment_post', array($this, 'save_comment_meta_data'));
+			add_action( 'comment_post', array( $this, 'save_comment_meta_data' ) );
 
 			//filter added for verify review details
-			add_filter('preprocess_comment', array($this, 'verify_comment_meta_data'));
+			add_filter( 'preprocess_comment', array( $this, 'verify_comment_meta_data' ) );
 
 			//action which extends review meta box for rating
-			add_action('add_meta_boxes_comment', array($this, 'extend_comment_add_meta_box'));
+			add_action( 'add_meta_boxes_comment', array( $this, 'extend_comment_add_meta_box' ) );
 
 			//action for edit meta fields
-			add_action('edit_comment', array($this, 'extend_comment_edit_metafields'));
+			add_action( 'edit_comment', array( $this, 'extend_comment_edit_metafields' ) );
 
 			//filter for comment template
-			add_filter('comments_template', array($this, 'review_template'));
+			add_filter( 'comments_template', array( $this, 'review_template' ) );
 
 			// to change comment form default fields
-			add_filter('comment_form_defaults', array($this, 'default_fields'));
+			add_filter( 'comment_form_defaults', array( $this, 'default_fields' ) );
 
 			// additional fields of comment for logged in and other users
-			add_action('comment_form_logged_in_after', array($this, 'additional_fields'));
-			add_action('comment_form_after_fields', array($this, 'additional_fields'));
+			add_action( 'comment_form_logged_in_after', array( $this, 'additional_fields' ) );
+			add_action( 'comment_form_after_fields', array( $this, 'additional_fields' ) );
 		}
 
 		/**
@@ -49,12 +49,12 @@ if (!class_exists('Admin')) {
 		public function custom_fields() {
 
 			$commenter = wp_get_current_commenter();
-			$req = get_option('require_name_email');
+			$req = get_option( 'require_name_email' );
 			$aria_req = ( $req ? " aria-required='true'" : '' );
 			//Add custom fields 
-			$fields['author'] = require \rtCamp\WP\rtRestaurants\PATH . 'includes/views/review-form-auther.php';
+			$fields[ 'author' ] = require \rtCamp\WP\rtRestaurants\PATH . 'includes/views/review-form-auther.php';
 
-			$fields['email'] = require \rtCamp\WP\rtRestaurants\PATH . 'includes/views/review-form-email.php';
+			$fields[ 'email' ] = require \rtCamp\WP\rtRestaurants\PATH . 'includes/views/review-form-email.php';
 
 			/**
 			 *  filter for custom fields of comment
@@ -66,7 +66,7 @@ if (!class_exists('Admin')) {
 			 * @param string  $var    name of filter
 			 * @param array $fields    array of custom fields for comment
 			 */
-			$fields = apply_filters('rt_restaurant_custom_comment_fields', $fields);
+			$fields = apply_filters( 'rt_restaurant_custom_comment_fields', $fields );
 
 			return $fields;
 		}
@@ -81,15 +81,15 @@ if (!class_exists('Admin')) {
 		 * @param int $comment_id
 		 * 
 		 */
-		public function save_comment_meta_data($comment_id) {
+		public function save_comment_meta_data( $comment_id ) {
 			//check for rating value
-			if (( isset($_POST['rating']) ) && ( $_POST['rating'] != ''))
-				$rating = wp_filter_nohtml_kses($_POST['rating']);
+			if ( ( isset( $_POST[ 'rating' ] ) ) && ( $_POST[ 'rating' ] != '') )
+				$rating = wp_filter_nohtml_kses( $_POST[ 'rating' ] );
 
 			//Add or update rating
-			add_comment_meta($comment_id, 'rating', $rating);
+			add_comment_meta( $comment_id, 'rating', $rating );
 
-			$this->add_transient_rating($comment_id);
+			$this->add_transient_rating( $comment_id );
 		}
 
 		/**
@@ -100,10 +100,10 @@ if (!class_exists('Admin')) {
 		 * 
 		 * @param array commentdata
 		 */
-		public function verify_comment_meta_data($commentdata) {
+		public function verify_comment_meta_data( $commentdata ) {
 
-			if (!isset($_POST['rating']) && is_singular('restaurants'))
-				wp_die(__('Error: You did not add a rating. Hit the Back button on your Web browser and resubmit your comment with a rating.'));
+			if ( !isset( $_POST[ 'rating' ] ) && is_singular( 'restaurants' ) )
+				wp_die( __( 'Error: You did not add a rating. Hit the Back button on your Web browser and resubmit your comment with a rating.' ) );
 			return $commentdata;
 		}
 
@@ -116,8 +116,8 @@ if (!class_exists('Admin')) {
 		 */
 		public function extend_comment_add_meta_box() {
 			$comment = get_comment();
-			if ('restaurants' === get_post_field('post_type', $comment->comment_post_ID)) {
-				add_meta_box('title', __('Comment Metadata - Extend Comment'), array($this, 'extend_comment_meta_box'), 'comment', 'normal', 'high');
+			if ( 'restaurants' === get_post_field( 'post_type', $comment->comment_post_ID ) ) {
+				add_meta_box( 'title', __( 'Comment Metadata - Extend Comment' ), array( $this, 'extend_comment_meta_box' ), 'comment', 'normal', 'high' );
 			}
 		}
 
@@ -131,13 +131,13 @@ if (!class_exists('Admin')) {
 		 * @param array $comment
 		 * 
 		 */
-		public function extend_comment_meta_box($comment, $args) {
+		public function extend_comment_meta_box( $comment, $args ) {
 
 			// Output buffer starts
 			ob_start();
-			$rating = get_comment_meta($comment->comment_ID, 'rating', true);
+			$rating = get_comment_meta( $comment->comment_ID, 'rating', true );
 			//nonce field
-			wp_nonce_field('rt_extend_comment_update', 'extend_comment_update', false);
+			wp_nonce_field( 'rt_extend_comment_update', 'extend_comment_update', false );
 
 			//includes restaurant timing html 
 			require \rtCamp\WP\rtRestaurants\PATH . 'includes/views/review.php';
@@ -155,7 +155,7 @@ if (!class_exists('Admin')) {
 			 * @param string  $var .
 			 * @param string $ob_rating_display_edit 
 			 */
-			$ob_rating_display_edit = apply_filters('rt_restaurant_rating_display_edit_html', $ob_rating_display_edit);
+			$ob_rating_display_edit = apply_filters( 'rt_restaurant_rating_display_edit_html', $ob_rating_display_edit );
 			echo $ob_rating_display_edit;
 		}
 
@@ -169,18 +169,18 @@ if (!class_exists('Admin')) {
 		 * @param int $comment_id
 		 * 
 		 */
-		public function extend_comment_edit_metafields($comment_id) {
+		public function extend_comment_edit_metafields( $comment_id ) {
 
-			if (!isset($_POST['extend_comment_update']) || !wp_verify_nonce($_POST['extend_comment_update'], 'rt_extend_comment_update'))
+			if ( !isset( $_POST[ 'extend_comment_update' ] ) || !wp_verify_nonce( $_POST[ 'extend_comment_update' ], 'rt_extend_comment_update' ) )
 				return;
 
-			if (( isset($_POST['rating']) ) && ( $_POST['rating'] != '')):
-				$rating = wp_filter_nohtml_kses($_POST['rating']);
-				update_comment_meta($comment_id, 'rating', $rating);
+			if ( ( isset( $_POST[ 'rating' ] ) ) && ( $_POST[ 'rating' ] != '') ):
+				$rating = wp_filter_nohtml_kses( $_POST[ 'rating' ] );
+				update_comment_meta( $comment_id, 'rating', $rating );
 			else :
-				delete_comment_meta($comment_id, 'rating');
+				delete_comment_meta( $comment_id, 'rating' );
 			endif;
-			$this->add_transient_rating($comment_id);
+			$this->add_transient_rating( $comment_id );
 		}
 
 		/**
@@ -194,21 +194,21 @@ if (!class_exists('Admin')) {
 		 * @param int $comment_id	Current comment id
 		 * 
 		 */
-		public function add_transient_rating($comment_id) {
-			$comment = get_comment($comment_id);
+		public function add_transient_rating( $comment_id ) {
+			$comment = get_comment( $comment_id );
 
-			$total_comments = get_comments_number($comment->comment_post_ID);
+			$total_comments = get_comments_number( $comment->comment_post_ID );
 			$args = array(
 			    'post_id' => $comment->comment_post_ID
 			);
 
 			// Retrives all comments for current post
-			$comments = get_comments($args);
+			$comments = get_comments( $args );
 			$rating = 0;
 			$cnt = 0;
-			foreach ($comments as $cmnts) {
+			foreach ( $comments as $cmnts ) {
 				//retrieves rating from each comment and adds it to the $total_rating
-				$rating += get_comment_meta($cmnts->comment_ID, 'rating', true);
+				$rating += get_comment_meta( $cmnts->comment_ID, 'rating', true );
 				$cnt += 1;
 			}
 			$average = $rating / $total_comments;
@@ -219,10 +219,10 @@ if (!class_exists('Admin')) {
 			    'rating' => $rating
 			);
 			//add or update transient
-			set_transient('average_rating', $transient_args);
+			set_transient( 'average_rating', $transient_args );
 
 			// Post meta for average rating
-			update_post_meta($comment->comment_post_ID, '_average_rating', $average);
+			update_post_meta( $comment->comment_post_ID, '_average_rating', $average );
 		}
 
 		/**
@@ -236,9 +236,9 @@ if (!class_exists('Admin')) {
 		 */
 		public function default_fields() {
 
-			$default ['comment_field'] = require \rtCamp\WP\rtRestaurants\PATH . 'includes/views/review-field.php';
-			$default ['title_reply'] = __('Review Us');
-			$default ['label_submit'] = __('Post Review');
+			$default [ 'comment_field' ] = require \rtCamp\WP\rtRestaurants\PATH . 'includes/views/review-field.php';
+			$default [ 'title_reply' ] = __( 'Review Us' );
+			$default [ 'label_submit' ] = __( 'Post Review' );
 
 			/**
 			 *  Filter for change in default fields of comment
@@ -250,7 +250,7 @@ if (!class_exists('Admin')) {
 			 * @param string  $var     name of filter
 			 * @param array   $default array for default fields of comment.
 			 */
-			$default = apply_filters('rt_restaurant_default_comment_fields', $default);
+			$default = apply_filters( 'rt_restaurant_default_comment_fields', $default );
 
 			return $default;
 		}
@@ -265,7 +265,7 @@ if (!class_exists('Admin')) {
 		 * @var string  $ob_rating  output buffer value
 		 */
 		public function additional_fields() {
-			if (is_singular('restaurants')) {
+			if ( is_singular( 'restaurants' ) ) {
 				// Output buffer starts
 				ob_start();
 				require \rtCamp\WP\rtRestaurants\PATH . 'includes/views/rating-fields.php';
@@ -282,7 +282,7 @@ if (!class_exists('Admin')) {
 				 * @param string $var name of the filter
 				 * @param string $ob_rating
 				 */
-				$ob_rating = apply_filters('rt_restaurant_rating_html', $ob_rating);
+				$ob_rating = apply_filters( 'rt_restaurant_rating_html', $ob_rating );
 				echo $ob_rating;
 			}
 		}
@@ -298,7 +298,7 @@ if (!class_exists('Admin')) {
 		 * @param string $args
 		 * @param int $depth
 		 */
-		public static function reviews_html($review, $args, $depth) {
+		public static function reviews_html( $review, $args, $depth ) {
 
 			//includes restaurant timing html
 			require \rtCamp\WP\rtRestaurants\PATH . 'templates/template-parts/content-review.php';
@@ -312,11 +312,11 @@ if (!class_exists('Admin')) {
 		 * @param string $theme_template
 		 * 
 		 */
-		public function review_template($theme_template) {
-			if (is_singular('restaurants')) {
-				$path = \rtCamp\WP\rtRestaurants\PATH . 'templates/comments-restaurants.php';
-				return $path;
+		public function review_template( $theme_template ) {
+			if ( is_singular( 'restaurants' ) ) {
+				$theme_template = \rtCamp\WP\rtRestaurants\PATH . 'templates/comments-restaurants.php';
 			}
+			return $theme_template;
 		}
 
 	}
