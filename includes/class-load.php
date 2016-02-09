@@ -25,20 +25,17 @@ if (!class_exists('Load')) {
 			//action for register taxomoies
 			add_action('init', array($this, 'register_taxonomy'));
 
+			//function call for class initialization
+			$this->classes_init();
+		}
+
+		/**
+		 * call init method of classes
+		 */
+		public function classes_init(){
+			
 			// create other classes' objects and call init() 
 			$class_names = array('theme', 'admin');
-
-			/**
-			 * Filter for initilize class objects and call init().
-			 *
-			 * filter  to change classes names for creating objects and call init().
-			 * 
-			 * @since 0.1
-			 *
-			 * @param string $var           Name of filter
-			 * @param array $class_names    array to store classes name
-			 */
-			$class_names = apply_filters('wp_hrt_class_loader', $class_names);
 
 			foreach ($class_names as $class) {
 				//capitalize first letter of class name
@@ -50,7 +47,7 @@ if (!class_exists('Load')) {
 				${$class}->init();
 			}
 		}
-
+		
 		/**
 		 * Flushes the rewrite rules.
 		 */
@@ -66,6 +63,7 @@ if (!class_exists('Load')) {
 		 * @since 0.1
 		 */
 		public function register_post_type() {
+			
 			// Array of labels for restaurant post type
 			$labels = array(
 				'name' => 'Restaurants',
@@ -143,6 +141,7 @@ if (!class_exists('Load')) {
 		 * 
 		 */
 		public function register_taxonomy() {
+			
 			// Array of taxomy name and label to register.
 			$taxonomy = array('restaurants_type' => 'Restaurants Type', 'food_type' => 'Food Type');
 

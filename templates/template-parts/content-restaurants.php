@@ -36,10 +36,14 @@ if (is_singular('restaurants')) {
 						<?php
 						// Output buffer starts
 						ob_start();
+						//get address of the restaurant
 						$current_post_address = get_post_meta($post->ID, '_restaurant_address', true);
+						
 						$addr = array("streetAddress", "addressLocality", "addressRegion", "postalCode", "addressCountry");
 						?>
-						<p class='labels'>Address </p>
+						<p class='labels'>
+							Address 
+						</p>
 						<div itemprop = "address" itemscope itemtype = "http://schema.org/PostalAddress">
 							<?php
 							// Loop for retrive address fields from address array
@@ -48,11 +52,14 @@ if (is_singular('restaurants')) {
 								?>
 								<span itemprop = "<?php echo $key ?>"> <?php echo $current_post_address[$key];
 						$address .= "," . $current_post_address[$key];
-								?><br /></span>
+								?>
+									<br />
+								</span>
 								<?php
 							}
 							?>
 						</div>
+						<!-- store address into hidden field for google map display -->
 						<input type="hidden" value="<?php echo $address; ?>" id="address_value"/>
 						<?php
 						// Empty output buffer and store it into variable
@@ -76,7 +83,7 @@ if (is_singular('restaurants')) {
 
 					<!-- Display Contact Number -->
 					<div class="contact">
-	<?php $phone_no = get_post_meta($post->ID, '_restaurant_contactno', true); ?>
+						<?php $phone_no = get_post_meta($post->ID, '_restaurant_contactno', true); ?>
 						<label class="labels">Contact Us:</label>
 						<span itemprop="telephone">
 							<a href="tel://<?php echo $phone_no ?>"><?php echo $phone_no ?></a>
@@ -90,6 +97,7 @@ if (is_singular('restaurants')) {
 							<?php
 							// Output buffer starts
 							ob_start();
+							//get restaurant type
 							$terms = wp_get_post_terms($post->ID, 'restaurants_type', '');
 							if (!is_wp_error($terms) && $terms) {
 								$term_text = '';
@@ -124,6 +132,7 @@ if (is_singular('restaurants')) {
 						<?php
 						// Output buffer starts 
 						ob_start();
+						//get food type for restaurant
 						$terms = wp_get_post_terms($post->ID, 'food_type', '');
 						if (!is_wp_error($terms) && $terms) {
 							$term_text = "<ul>";
@@ -162,6 +171,8 @@ if (is_singular('restaurants')) {
 						<?php
 						// Output buffer starts
 						ob_start();
+						
+						//get current restaurant timing
 						$current_post_timing = get_post_meta($post->ID, '_timing', true);
 						$days = array("mon" => "Monday", "tue" => "Tuesday", "wed" => "Wednesday", "thu" => "Thursday", "fri" => "Friday", "sat" => "Saturday", "sun" => "Sunday");
 						?>
