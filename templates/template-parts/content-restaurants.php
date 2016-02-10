@@ -23,6 +23,9 @@ if (is_singular('restaurants')) {
 					$star_url = \rtCamp\WP\rtRestaurants\URL . 'assets/images/';
 					echo "<img src=\"" . $star_url . intval($rating) . "star.png\" />";
 				}
+				
+				//Action to add into rating star display
+				do_action( 'rt_restaurants_average_rating_display');
 				?>
 			</div>
 		</header>
@@ -77,6 +80,14 @@ if (is_singular('restaurants')) {
 						 */
 						$ob_restaurant_address = apply_filters('rt_restaurant_address_html', $ob_restaurant_address);
 
+						
+						/**
+						 * Action to add fields in address display
+						 * 
+						 * @param string  $ob_restaurant_address  output string of address html
+						 */
+						do_action('rt_restaurants_address_frontend_display',$ob_restaurant_address);
+						
 						echo $ob_restaurant_address;
 						?>
 					</div>
@@ -87,6 +98,15 @@ if (is_singular('restaurants')) {
 						<label class="labels">Contact Us:</label>
 						<span itemprop="telephone">
 							<a href="tel://<?php echo $phone_no ?>"><?php echo $phone_no ?></a>
+							<?php
+							
+							/**
+							 * Action to add fields in contact number display
+							 * 
+							 * @param string $phone_no
+							 */
+							do_action('rt_restaurants_contactno_frontend_display',$phone_no);
+							?>
 						</span>
 					</div>
 
@@ -121,6 +141,13 @@ if (is_singular('restaurants')) {
 							 */
 							$ob_restaurant_type = apply_filters('rt_restaurant_type_html', $ob_restaurant_type);
 
+							/**
+							 * Action to add fields in restaurant type display
+							 * 
+							 * @param string  $ob_restaurant_type  output string of restaurant type html
+							 */
+							do_action('rt_restaurants_type_address_frontend_display', $ob_restaurant_type);
+							
 							echo $ob_restaurant_type;
 							?>
 						<p>
@@ -157,6 +184,13 @@ if (is_singular('restaurants')) {
 						 */
 						$ob_food_type = apply_filters('rt_restaurant_food_type_html', $ob_food_type);
 
+						/**
+						 * Action to add fields in food type display
+						 * 
+						 * @param string  $ob_food_type  output string of food type html
+						 */
+						do_action('rt_restaurants_food_type_frontend_display', $ob_food_type);
+						
 						echo $ob_food_type;
 						?>
 					</div>
@@ -217,6 +251,13 @@ if (is_singular('restaurants')) {
 						 */
 						$ob_timing = apply_filters('rt_restaurant_timing_table_html', $ob_timing);
 
+						/**
+						 * Action to add fields in restaurant timing display
+						 * 
+						 * @param string  $ob_timing  output string of restaurant timing html
+						 */
+						do_action('rt_restaurants_timing_frontend_display', $ob_timing);
+						
 						echo $ob_timing;
 						?>
 					</div>

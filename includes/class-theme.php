@@ -110,6 +110,17 @@ if ( !class_exists( 'Theme' ) ) {
 				$path_template = \rtCamp\WP\rtRestaurants\PATH . 'templates/' . $type . '-restaurants.php';
 				$template = $path_template;
 			}
+			
+			/**
+			 * Filter to change template path
+			 *
+			 * @since 0.1
+			 *
+			 * @param string $var    Filter name
+			 * @param array $template
+			 */
+			$template = apply_filters('rt_restaurants_template_path',$template);
+			
 			return $template;
 		}
 

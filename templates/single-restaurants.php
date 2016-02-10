@@ -9,8 +9,9 @@ get_header();
 		while (have_posts()) : the_post();
 
 			//load content of restaurant
-			include_once \rtCamp\WP\rtRestaurants\PATH . "/templates/template-parts/content-restaurants.php";
+			include \rtCamp\WP\rtRestaurants\PATH . "/templates/template-parts/content-restaurants.php";
 
+			//Action to add fields
 			do_action('rt_restaurants_add_fields');
 			
 			// Previous/next post navigation.

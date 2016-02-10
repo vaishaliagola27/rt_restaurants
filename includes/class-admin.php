@@ -74,16 +74,25 @@ if ( !class_exists( 'Admin' ) ) {
 				'priority' => 'default'
 			    )
 			);
+			
 			/**
 			 * Filter to add one or more meta boxes
 			 *
 			 * @since 0.1
 			 *
 			 * @param string $var    Filter name
-			 * @param array $args
+			 * @param array $meta_box_args
 			 */
 			$meta_box_args = apply_filters( 'rt_restaurants_add_meta_boxes', $meta_box_args );
 
+			
+			/**
+			 * action to run code before meta boxes added
+			 * 
+			 * @param array $meta_box_args
+			 */
+			do_action('rt_restaurants_before_add_meta_boxes',$meta_box_args);
+			
 			//add all meta boxes in array
 			foreach ( $meta_box_args as $key => $value ) {
 				add_meta_box(
@@ -130,6 +139,15 @@ if ( !class_exists( 'Admin' ) ) {
 			 * @param string $ob_address
 			 */
 			$ob_address = apply_filters( 'rt_restaurant_address_html', $ob_address );
+			
+			
+			/**
+			 * Action to add extra fields in address display
+			 * 
+			 * @param string $ob_address
+			 */
+			do_action('rt_restaurants_address_display',$ob_address);
+			
 			return $ob_address;
 		}
 
@@ -188,6 +206,13 @@ if ( !class_exists( 'Admin' ) ) {
 			 */
 			$address = apply_filters( 'rt_restaurant_save_address', $address );
 
+			/**
+			 * Action to run code before saving address
+			 * 
+			 * @param array  $address
+			 */
+			do_action('rt_restaurants_before_save_address',$address);
+			
 			//add or update address post meta
 			update_post_meta( $post_id, '_restaurant_address', $address );
 		}
@@ -236,13 +261,20 @@ if ( !class_exists( 'Admin' ) ) {
 			 * @since 0.1
 			 *
 			 * @param string $var    Name of filter
-			 * @param array  $address
+			 * @param string  $contact_no
 			 */
 			$contact_no = apply_filters( 'rt_restaurant_save_contact_no', $contact_no );
 
 			//sanitize contact number data
 			$contact_no = sanitize_text_field( $contact_no );
 
+			/**
+			 * Action to run code before saving contact number
+			 * 
+			 * @param string  $contact_no
+			 */
+			do_action('rt_restaurants_before_save_contactno',$contact_no);
+			
 			//Adds or updates contact number post meta
 			update_post_meta( $post_id, '_restaurant_contactno', $contact_no );
 		}
@@ -292,6 +324,14 @@ if ( !class_exists( 'Admin' ) ) {
 			 */
 			$ob_contactno = apply_filters( 'rt_restaurant_contactno_html', $ob_contactno );
 
+			
+			/**
+			 * Action to add data to display contact number
+			 * 
+			 * @param string $ob_contactno
+			 */
+			do_action('rt_restaurants_contactno_display',$ob_contactno);
+			
 			return $ob_contactno;
 		}
 
@@ -342,6 +382,14 @@ if ( !class_exists( 'Admin' ) ) {
 			 * @param string $ob_timing_working_days
 			 */
 			$ob_timing_working_days = apply_filters( 'rt_restaurant_timing_working_days_html', $ob_timing_working_days );
+			
+			/**
+			 * Action to add data to display Timing
+			 * 
+			 * @param string $ob_timing_working_days
+			 */
+			do_action('rt_restaurants_timing_display',$ob_timing_working_days);
+			
 			return $ob_timing_working_days;
 		}
 
@@ -387,10 +435,17 @@ if ( !class_exists( 'Admin' ) ) {
 			 * @since 0.1
 			 *
 			 * @param string $var    Name of filter
-			 * @param array  $address
+			 * @param array  $time
 			 */
 			$time = apply_filters( 'rt_restaurant_save_time', $time );
 
+			/**
+			 * Action to run code before saving timing of restaurant
+			 * 
+			 * @param array  $time
+			 */
+			do_action('rt_restaurants_before_save_timing',$time);
+			
 			//Add or update timing post meta
 			update_post_meta( $post_id, '_timing', $time );
 			// Computing close days
@@ -401,6 +456,7 @@ if ( !class_exists( 'Admin' ) ) {
 					$close_days[ $i++ ] = ($key);
 				}
 			}
+			
 			/**
 			 *  Filter for close day calculation
 			 *
@@ -433,6 +489,17 @@ if ( !class_exists( 'Admin' ) ) {
 			    'contactno' => __( 'Contact No' ),
 			    'timing' => __( 'Restaurant Time' ),
 				) );
+			
+			/**
+			 *  Filter for columns in back end
+			 *
+			 * @since 0.1
+			 *
+			 * @param string $var           name of filter
+			 * @param array  $new_columns   
+			 */
+			$new_columns = apply_filters('rt_restaurants_columns',$new_columns);
+			
 			return $new_columns;
 		}
 
@@ -479,6 +546,9 @@ if ( !class_exists( 'Admin' ) ) {
 				default :
 					break;
 			}
+			
+			//Action to display other column data
+			do_action('rt_restaurants_column_data');
 		}
 
 		/**
@@ -511,6 +581,9 @@ if ( !class_exists( 'Admin' ) ) {
 				default:
 					break;
 			}
+			
+			//Action to display quick edit of columns
+			do_action('rt_restaurants_column_quick_edit');
 		}
 
 		/**
@@ -526,6 +599,9 @@ if ( !class_exists( 'Admin' ) ) {
 				'restaurants' === $_GET[ 'post_type' ] ) {
 				wp_enqueue_script( 'my_custom_script', plugins_url( 'rt_restaurants/assets/js/admin_edit.js', \rtCamp\WP\rtRestaurants\PATH ), false, null, true );
 			}
+			
+			//Action to add other column scripts
+			do_action( 'rt_restaurants_enqueue_edit_script' );
 		}
 
 	}

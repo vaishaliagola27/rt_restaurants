@@ -130,6 +130,7 @@ if ( !class_exists( 'Load' ) ) {
 			foreach ( $new_post_types as $key => $args ) {
 				register_post_type( $key, $args );
 			}
+			
 		}
 
 		/**

@@ -15,7 +15,11 @@
 			<?php
 		}
 		?>
-	</span>  
+	</span>
+	<?php
+	//Action to add extra fields in review
+	do_action( 'rt_restaurants_review_fields');
+	?>
 </p>
 <?php
 		

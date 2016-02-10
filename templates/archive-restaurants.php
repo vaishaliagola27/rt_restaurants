@@ -25,6 +25,9 @@ get_header();
 							esc_html__('Edit %s', '_s'), the_title('<span class="screen-reader-text">"', '"</span>', false)
 						), '<span class="archive-edit-link">', '</span>'
 					);
+					
+					//Action to display extra fields on archive page
+					do_action( 'rt_restaurants_archive_page');
 					?>
 				</div>
 				<?php

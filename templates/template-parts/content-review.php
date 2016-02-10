@@ -75,4 +75,13 @@ $ob_review_all = ob_get_clean();
  * @param string $ob_review_all  
  */
 $ob_review_all = apply_filters('rt_restaurant_review_display', $ob_review_all);
+
+
+/**
+ * Action to display extra fields
+ * 
+ * @param string $ob_review_all
+ */
+do_action('rt_restaurants_review_display', $ob_review_all);
+
 echo $ob_review_all;

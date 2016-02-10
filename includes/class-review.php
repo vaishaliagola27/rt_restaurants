@@ -99,6 +99,13 @@ if ( !class_exists( 'Admin' ) ) {
 			//Add or update rating
 			add_comment_meta( $comment_id, 'rating', $rating );
 
+			/**
+			 * Action to change rating
+			 * 
+			 * @param array  $address
+			 */
+			do_action('rt_restaurants_save_rating',$rating);
+			
 			$this->add_transient_rating( $comment_id );
 		}
 
@@ -293,6 +300,14 @@ if ( !class_exists( 'Admin' ) ) {
 				 * @param string $ob_rating
 				 */
 				$ob_rating = apply_filters( 'rt_restaurant_rating_html', $ob_rating );
+				
+				/**
+				 * Action to display additional fields
+				 * 
+				 * @param string $ob_rating
+				 */
+				do_action('rt_restaurants_fields_comment',$ob_rating);
+				
 				echo $ob_rating;
 			}
 		}
