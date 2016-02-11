@@ -11,7 +11,7 @@ and open the template in the editor.
 
 /* main content of restaurant page css*/
 .main-content{
-	width:130%;
+	width:100%;
 	margin:0 10% 0 10%;
 	height: auto;
 	display: inline-block;
@@ -109,7 +109,7 @@ and open the template in the editor.
 /* Restaurant timing css */
 .main-content >.content .content-left .right .timing_table{
 	border:none;
-	width: 140%;
+	width: 100%;
 	font-size: 12px;
 }
 

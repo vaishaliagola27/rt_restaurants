@@ -40,9 +40,11 @@ if ( !class_exists( 'Theme' ) ) {
 
 			// Enqueuing styles
 			wp_enqueue_style( "restaurants_css", $template_directory_uri . 'assets/css/restaurant.css' );
+			wp_enqueue_style( "grid_css", $template_directory_uri . 'assets/css/grid-layout.css' );
 			wp_enqueue_style( "Slick_css", $template_directory_uri . 'lib/slick/slick/slick.css' );
 			wp_enqueue_style( "Slick_theme_css", $template_directory_uri . 'lib/slick/slick/slick-theme.css' );
-
+			
+			
 			// Registering slick script
 			wp_register_script( 'slick-js1', $template_directory_uri . 'lib/slick/slick/slick.min.js' );
 			wp_enqueue_script( 'slick-js1' );
