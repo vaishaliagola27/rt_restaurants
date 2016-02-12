@@ -27,6 +27,9 @@ if ( !class_exists( 'Admin' ) ) {
 
 			//save timing meta box
 			add_action( 'save_post', array( $this, 'save_timing' ) );
+			
+			//save meta box of related restaurants
+			add_action( 'save_post', array( $this, 'save_related_restaurants' ) );
 
 			//for display column in list
 			add_filter( 'manage_restaurants_posts_columns', array( $this, 'add_restaurants_columns' ) );
@@ -72,6 +75,14 @@ if ( !class_exists( 'Admin' ) ) {
 				'screen' => 'restaurants',
 				'context' => 'side',
 				'priority' => 'default'
+			    ),
+			    'related_restaurants' => array(
+				'id' => 'related-restaurants',
+				'title' => 'Related Restaurants',
+				'callback' => 'add_related_restaurants_meta_box',
+				'screen' => 'restaurants',
+				'context' => 'side',
+				'priority' => 'default'
 			    )
 			);
 			
@@ -100,6 +111,86 @@ if ( !class_exists( 'Admin' ) ) {
 			}
 		}
 
+		/**
+		 * 
+		 * @param array $post
+		 */
+		private function display_relative_restaurants($post){
+			//output buffer start
+			ob_start();
+			
+			wp_nonce_field('rt_restaurant_related_restaurants_nonce','related_restaurants_nonce',false);
+			
+			//includes html
+			require \rtCamp\WP\rtRestaurants\PATH . 'includes/views/related_restaurants.php';
+			
+			//clean and save output buffer value
+			$ob_related_restaurants = ob_get_clean();
+			return $ob_related_restaurants;
+		}
+		
+		/**
+		 * 
+		 * @param type $post_id
+		 * @return type
+		 */
+		public function save_related_restaurants($post_id){
+			//check for empty post id
+			if ( empty( $post_id ) ) {
+				$post_id = $_POST[ 'post_ID' ];
+			}
+			if ( empty( $post_id ) ) {
+				return;
+			}
+			
+			//verify nonce for restaurants
+			$related_restaurants_nonce = !empty( $_POST[ 'related_restaurants_nonce' ] ) ? $_POST[ 'related_restaurants_nonce' ] : '';
+			if ( empty( $related_restaurants_nonce ) ) {
+				return;
+			}
+
+			if ( !wp_verify_nonce( $_POST[ 'related_restaurants_nonce' ], 'rt_restaurant_related_restaurants_nonce' ) ) {
+				return;
+			}
+
+			//fetch value of related restaurants
+			$related_restaurants = isset( $_POST[ 'related_restaurants' ] ) ? $_POST[ 'related_restaurants' ] : '';
+			if ( empty( $related_restaurants ) ) {
+				return;
+			}
+			
+			$related_restaurants = explode(",", $related_restaurants);
+			$count=count( $related_restaurants );
+			unset( $related_restaurants[$count-1]);
+			
+			/**
+			 *  Filter to change related restaurants value
+			 *
+			 * @since 0.1
+			 *
+			 * @param string $var    Name of filter
+			 * @param array  $related_restaurants
+			 */
+			$related_restaurants = apply_filters( 'rt_restaurant_related_resaturant_save', $related_restaurants );
+
+			/**
+			 * Action to run code before saving related restaurants
+			 * 
+			 * @param array  $related_restaurants
+			 */
+			do_action('rt_restaurants_before_save_related_restaurants',$related_restaurants);
+			
+			//add or update address post meta
+			update_post_meta( $post_id, '_related_restaurant', $related_restaurants );
+		}
+
+		/**
+		 * 
+		 * @param array $post
+		 */
+		public function add_related_restaurants_meta_box($post){
+			echo $this->display_relative_restaurants($post);
+		}
 		/**
 		 *  display/add meta box on restaurants post.
 		 *
@@ -593,6 +684,7 @@ if ( !class_exists( 'Admin' ) ) {
 		 * @param array $hook
 		 */
 		public function wp_admin_enqueue_scripts( $hook ) {
+			$template_directory_uri = \rtCamp\WP\rtRestaurants\URL;
 			//enqueue admin edit script for quick edit
 			if ( 'edit.php' === $hook &&
 				isset( $_GET[ 'post_type' ] ) &&
@@ -600,6 +692,14 @@ if ( !class_exists( 'Admin' ) ) {
 				wp_enqueue_script( 'my_custom_script', plugins_url( 'rt_restaurants/assets/js/admin_edit.js', \rtCamp\WP\rtRestaurants\PATH ), false, null, true );
 			}
 			
+			//jquery ui 
+			wp_register_script('jquery-ui',"//code.jquery.com/ui/1.11.4/jquery-ui.js");
+			wp_enqueue_script( 'jquery-ui' );  
+			
+			//js for related restaurants
+			wp_register_script( 'related-restaurants-js', $template_directory_uri . '/assets/js/related_restaurants.js' );
+			wp_enqueue_script( 'related-restaurants-js' );
+			wp_localize_script('related-restaurants-js', 'auto', array('ajax_url' => admin_url('admin-ajax.php')));
 			//Action to add other column scripts
 			do_action( 'rt_restaurants_enqueue_edit_script' );
 		}

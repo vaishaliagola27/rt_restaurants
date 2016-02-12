@@ -16,7 +16,7 @@ if ( !class_exists( 'Theme' ) ) {
 		 */
 		public function init() {
 			//enqueue all scripts and styles for restaurant
-			add_action( 'wp_enqueue_scripts', array( $this, 'add_css_js' ) );
+			add_action( 'wp_enqueue_scripts', array( $this, 'wp_enqueue_css_js' ) );
 
 			// add template and call load-template
 			add_filter( 'template_include', array( $this, 'load_template_single' ) );
@@ -31,7 +31,7 @@ if ( !class_exists( 'Theme' ) ) {
 		 * @since 0.1
 		 *
 		 */
-		public function add_css_js() {
+		public function wp_enqueue_css_js() {
 			$template_directory_uri = \rtCamp\WP\rtRestaurants\URL;
 
 			//Local scripts for admin
@@ -56,7 +56,9 @@ if ( !class_exists( 'Theme' ) ) {
 			// Registering restaurant js
 			wp_register_script( 'slider-js', $template_directory_uri . '/assets/js/restaurants.js' );
 			wp_enqueue_script( 'slider-js' );
+			
 		}
+		
 
 		/**
 		 * loads template for single restaurant page
