@@ -27,7 +27,7 @@ if ( !class_exists( 'Admin' ) ) {
 
 			//save timing meta box
 			add_action( 'save_post', array( $this, 'save_timing' ) );
-			
+
 			//save meta box of related restaurants
 			add_action( 'save_post', array( $this, 'save_related_restaurants' ) );
 
@@ -42,6 +42,9 @@ if ( !class_exists( 'Admin' ) ) {
 
 			//add script admin_edit
 			add_action( 'admin_enqueue_scripts', array( $this, 'wp_admin_enqueue_scripts' ) );
+
+			//call for related restaurants
+			add_action( 'wp_ajax_related_restaurants', array($this,'related_restaurants') );
 		}
 
 		/**
@@ -85,7 +88,7 @@ if ( !class_exists( 'Admin' ) ) {
 				'priority' => 'default'
 			    )
 			);
-			
+
 			/**
 			 * Filter to add one or more meta boxes
 			 *
@@ -96,14 +99,14 @@ if ( !class_exists( 'Admin' ) ) {
 			 */
 			$meta_box_args = apply_filters( 'rt_restaurants_add_meta_boxes', $meta_box_args );
 
-			
+
 			/**
 			 * action to run code before meta boxes added
 			 * 
 			 * @param array $meta_box_args
 			 */
-			do_action('rt_restaurants_before_add_meta_boxes',$meta_box_args);
-			
+			do_action( 'rt_restaurants_before_add_meta_boxes', $meta_box_args );
+
 			//add all meta boxes in array
 			foreach ( $meta_box_args as $key => $value ) {
 				add_meta_box(
@@ -115,26 +118,26 @@ if ( !class_exists( 'Admin' ) ) {
 		 * 
 		 * @param array $post
 		 */
-		private function display_relative_restaurants($post){
+		private function display_relative_restaurants( $post ) {
 			//output buffer start
 			ob_start();
-			
-			wp_nonce_field('rt_restaurant_related_restaurants_nonce','related_restaurants_nonce',false);
-			
+
+			wp_nonce_field( 'rt_restaurant_related_restaurants_nonce', 'related_restaurants_nonce', false );
+
 			//includes html
 			require \rtCamp\WP\rtRestaurants\PATH . 'includes/views/related_restaurants.php';
-			
+
 			//clean and save output buffer value
 			$ob_related_restaurants = ob_get_clean();
 			return $ob_related_restaurants;
 		}
-		
+
 		/**
 		 * 
 		 * @param type $post_id
 		 * @return type
 		 */
-		public function save_related_restaurants($post_id){
+		public function save_related_restaurants( $post_id ) {
 			//check for empty post id
 			if ( empty( $post_id ) ) {
 				$post_id = $_POST[ 'post_ID' ];
@@ -142,7 +145,7 @@ if ( !class_exists( 'Admin' ) ) {
 			if ( empty( $post_id ) ) {
 				return;
 			}
-			
+
 			//verify nonce for restaurants
 			$related_restaurants_nonce = !empty( $_POST[ 'related_restaurants_nonce' ] ) ? $_POST[ 'related_restaurants_nonce' ] : '';
 			if ( empty( $related_restaurants_nonce ) ) {
@@ -158,11 +161,11 @@ if ( !class_exists( 'Admin' ) ) {
 			if ( empty( $related_restaurants ) ) {
 				return;
 			}
-			
-			$related_restaurants = explode(",", $related_restaurants);
-			$count=count( $related_restaurants );
-			unset( $related_restaurants[$count-1]);
-			
+
+			$related_restaurants = explode( ",", $related_restaurants );
+			$count = count( $related_restaurants );
+			unset( $related_restaurants[ $count - 1 ] );
+
 			/**
 			 *  Filter to change related restaurants value
 			 *
@@ -178,8 +181,8 @@ if ( !class_exists( 'Admin' ) ) {
 			 * 
 			 * @param array  $related_restaurants
 			 */
-			do_action('rt_restaurants_before_save_related_restaurants',$related_restaurants);
-			
+			do_action( 'rt_restaurants_before_save_related_restaurants', $related_restaurants );
+
 			//add or update address post meta
 			update_post_meta( $post_id, '_related_restaurant', $related_restaurants );
 		}
@@ -188,9 +191,10 @@ if ( !class_exists( 'Admin' ) ) {
 		 * 
 		 * @param array $post
 		 */
-		public function add_related_restaurants_meta_box($post){
-			echo $this->display_relative_restaurants($post);
+		public function add_related_restaurants_meta_box( $post ) {
+			echo $this->display_relative_restaurants( $post );
 		}
+
 		/**
 		 *  display/add meta box on restaurants post.
 		 *
@@ -230,15 +234,15 @@ if ( !class_exists( 'Admin' ) ) {
 			 * @param string $ob_address
 			 */
 			$ob_address = apply_filters( 'rt_restaurant_address_html', $ob_address );
-			
-			
+
+
 			/**
 			 * Action to add extra fields in address display
 			 * 
 			 * @param string $ob_address
 			 */
-			do_action('rt_restaurants_address_display',$ob_address);
-			
+			do_action( 'rt_restaurants_address_display', $ob_address );
+
 			return $ob_address;
 		}
 
@@ -302,8 +306,8 @@ if ( !class_exists( 'Admin' ) ) {
 			 * 
 			 * @param array  $address
 			 */
-			do_action('rt_restaurants_before_save_address',$address);
-			
+			do_action( 'rt_restaurants_before_save_address', $address );
+
 			//add or update address post meta
 			update_post_meta( $post_id, '_restaurant_address', $address );
 		}
@@ -364,8 +368,8 @@ if ( !class_exists( 'Admin' ) ) {
 			 * 
 			 * @param string  $contact_no
 			 */
-			do_action('rt_restaurants_before_save_contactno',$contact_no);
-			
+			do_action( 'rt_restaurants_before_save_contactno', $contact_no );
+
 			//Adds or updates contact number post meta
 			update_post_meta( $post_id, '_restaurant_contactno', $contact_no );
 		}
@@ -415,14 +419,14 @@ if ( !class_exists( 'Admin' ) ) {
 			 */
 			$ob_contactno = apply_filters( 'rt_restaurant_contactno_html', $ob_contactno );
 
-			
+
 			/**
 			 * Action to add data to display contact number
 			 * 
 			 * @param string $ob_contactno
 			 */
-			do_action('rt_restaurants_contactno_display',$ob_contactno);
-			
+			do_action( 'rt_restaurants_contactno_display', $ob_contactno );
+
 			return $ob_contactno;
 		}
 
@@ -473,14 +477,14 @@ if ( !class_exists( 'Admin' ) ) {
 			 * @param string $ob_timing_working_days
 			 */
 			$ob_timing_working_days = apply_filters( 'rt_restaurant_timing_working_days_html', $ob_timing_working_days );
-			
+
 			/**
 			 * Action to add data to display Timing
 			 * 
 			 * @param string $ob_timing_working_days
 			 */
-			do_action('rt_restaurants_timing_display',$ob_timing_working_days);
-			
+			do_action( 'rt_restaurants_timing_display', $ob_timing_working_days );
+
 			return $ob_timing_working_days;
 		}
 
@@ -535,8 +539,8 @@ if ( !class_exists( 'Admin' ) ) {
 			 * 
 			 * @param array  $time
 			 */
-			do_action('rt_restaurants_before_save_timing',$time);
-			
+			do_action( 'rt_restaurants_before_save_timing', $time );
+
 			//Add or update timing post meta
 			update_post_meta( $post_id, '_timing', $time );
 			// Computing close days
@@ -547,7 +551,7 @@ if ( !class_exists( 'Admin' ) ) {
 					$close_days[ $i++ ] = ($key);
 				}
 			}
-			
+
 			/**
 			 *  Filter for close day calculation
 			 *
@@ -580,7 +584,7 @@ if ( !class_exists( 'Admin' ) ) {
 			    'contactno' => __( 'Contact No' ),
 			    'timing' => __( 'Restaurant Time' ),
 				) );
-			
+
 			/**
 			 *  Filter for columns in back end
 			 *
@@ -589,8 +593,8 @@ if ( !class_exists( 'Admin' ) ) {
 			 * @param string $var           name of filter
 			 * @param array  $new_columns   
 			 */
-			$new_columns = apply_filters('rt_restaurants_columns',$new_columns);
-			
+			$new_columns = apply_filters( 'rt_restaurants_columns', $new_columns );
+
 			return $new_columns;
 		}
 
@@ -637,9 +641,9 @@ if ( !class_exists( 'Admin' ) ) {
 				default :
 					break;
 			}
-			
+
 			//Action to display other column data
-			do_action('rt_restaurants_column_data');
+			do_action( 'rt_restaurants_column_data' );
 		}
 
 		/**
@@ -672,9 +676,9 @@ if ( !class_exists( 'Admin' ) ) {
 				default:
 					break;
 			}
-			
+
 			//Action to display quick edit of columns
-			do_action('rt_restaurants_column_quick_edit');
+			do_action( 'rt_restaurants_column_quick_edit' );
 		}
 
 		/**
@@ -691,17 +695,34 @@ if ( !class_exists( 'Admin' ) ) {
 				'restaurants' === $_GET[ 'post_type' ] ) {
 				wp_enqueue_script( 'my_custom_script', plugins_url( 'rt_restaurants/assets/js/admin_edit.js', \rtCamp\WP\rtRestaurants\PATH ), false, null, true );
 			}
-			
+
 			//jquery ui 
-			wp_register_script('jquery-ui',"//code.jquery.com/ui/1.11.4/jquery-ui.js");
-			wp_enqueue_script( 'jquery-ui' );  
-			
+			wp_register_script( 'jquery-ui', "//code.jquery.com/ui/1.11.4/jquery-ui.js" );
+			wp_enqueue_script( 'jquery-ui' );
+
 			//js for related restaurants
 			wp_register_script( 'related-restaurants-js', $template_directory_uri . '/assets/js/related_restaurants.js' );
 			wp_enqueue_script( 'related-restaurants-js' );
-			wp_localize_script('related-restaurants-js', 'auto', array('ajax_url' => admin_url('admin-ajax.php')));
+			wp_localize_script( 'related-restaurants-js', 'auto', array( 'admin_url' => admin_url( 'admin-ajax.php' ) ) );
 			//Action to add other column scripts
 			do_action( 'rt_restaurants_enqueue_edit_script' );
+		}
+
+		public function related_restaurants() {
+			$args = array(
+			    'post_type' => 'restaurants',
+			    'numberposts' => -1,
+			);
+			$posts = get_posts( $args );
+			$id_title = array();
+			foreach ( $posts as $key => $value ) {
+				$id_title[] = array(
+				    'label' => $value->post_title,
+				    'value' => $value->ID,
+				);
+			}
+			echo json_encode( $id_title );
+			wp_die();
 		}
 
 	}
