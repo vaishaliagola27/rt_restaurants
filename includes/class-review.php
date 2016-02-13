@@ -324,9 +324,14 @@ if ( !class_exists( 'Admin' ) ) {
 		 * @param int $depth
 		 */
 		public static function reviews_html( $review, $args, $depth ) {
-
-			//includes restaurant timing html
-			require \rtCamp\WP\rtRestaurants\PATH . 'templates/template-parts/content-review.php';
+			
+			if(locate_template('template-parts/content-review.php' )){
+				require get_template_directory() . '/template-parts/content-review.php';
+			}else{
+				//includes restaurant timing html
+				require \rtCamp\WP\rtRestaurants\PATH . 'templates/template-parts/content-review.php';
+			}
+			
 		}
 
 		/**
@@ -338,7 +343,11 @@ if ( !class_exists( 'Admin' ) ) {
 		 *
 		 */
 		public function review_template( $theme_template ) {
-			if ( is_singular( 'restaurants' ) ) {
+			if(locate_template( 'comments-restaurants.php') ){
+				
+				$theme_template = get_template_directory() .'/comments-restaurants.php';
+			}
+			if ( is_singular( 'restaurants' ) && !locate_template( 'comments-restaurants.php')) {
 				$theme_template = \rtCamp\WP\rtRestaurants\PATH . 'templates/comments-restaurants.php';
 			}
 			return $theme_template;

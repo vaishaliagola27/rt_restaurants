@@ -7,9 +7,19 @@
 
 jQuery(document).ready(function () {
 
+//Slick for slideshow
+	jQuery('.related_restaurants_slide').slick({
+		infinite: true,
+		slidesToShow: 3,
+		slidesToScroll: 1,
+		adaptiveHeight: true,
+		dots:true
+	});
+
 	//Slick for slideshow
 	jQuery('.image-gallery').slick({
 		dots: true,
+		autoplay: true,
 		infinite: true,
 		speed: 500,
 		fade: true,

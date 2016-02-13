@@ -1,3 +1,4 @@
+
 jQuery(function () {
 	var data = {
 		'action': 'related_restaurants',

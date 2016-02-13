@@ -43,6 +43,11 @@ if ( !class_exists( 'Admin' ) ) {
 			//add script admin_edit
 			add_action( 'admin_enqueue_scripts', array( $this, 'wp_admin_enqueue_scripts' ) );
 
+			//for featured image
+			add_theme_support('post-thumbnails', array('restaurants'));
+			set_post_thumbnail_size(200, 78);
+			add_image_size('single-post-thumbnail', 400, 9999);
+			
 			//call for related restaurants
 			add_action( 'wp_ajax_related_restaurants', array($this,'related_restaurants') );
 		}
