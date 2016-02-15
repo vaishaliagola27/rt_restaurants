@@ -6,7 +6,6 @@ jQuery(function () {
 	jQuery.post(auto.admin_url, data, function (response) {
 
 		obj = JSON.parse('[' + response + ']');
-
 		for (var i = 0; i < obj[0].length; i++) {
 			var restaurants = {};
 			restaurants['id'] = obj[0][i].value;

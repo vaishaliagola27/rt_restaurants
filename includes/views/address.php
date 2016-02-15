@@ -3,7 +3,7 @@
 ?>
 <table class="address_table">
 	<?php
-	
+	$address_map='';
 	//display address values into it's fields
 	foreach ($addr as $key => $value) {
 		if ($add != NULL && !empty($add)) {
@@ -21,7 +21,11 @@
 			</td> 
 		</tr>
 		<?php
+		$address_map .= $value . ','; 
 	}
 	?>
+		<input type="hidden" name="address_val" id="map_address" value="<?php echo $address_map ?>" />
 </table>
+<!-- google map for address -->
+<div id="map"></div>
 <?php

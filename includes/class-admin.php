@@ -704,8 +704,21 @@ if ( !class_exists( 'Admin' ) ) {
 			wp_register_script( 'related-restaurants-js', $template_directory_uri . '/assets/js/related_restaurants.js' );
 			wp_enqueue_script( 'related-restaurants-js' );
 			wp_localize_script( 'related-restaurants-js', 'auto', array( 'admin_url' => admin_url( 'admin-ajax.php' ) ) );
+			
+			//register script for google map
+			wp_register_script( 'google-map', "http://maps.googleapis.com/maps/api/js?sensor=false" );
+			wp_enqueue_script( 'google-map' );
+			
+			//address map
+			wp_register_script( 'address-map-js', $template_directory_uri . '/assets/js/addressmap_admin.js' );
+			wp_enqueue_script( 'address-map-js' );
+			
+			//
+			wp_enqueue_style( "restaurants_admin_css", $template_directory_uri . 'assets/css/admin.css' );
+			
 			//Action to add other column scripts
 			do_action( 'rt_restaurants_enqueue_edit_script' );
+			
 		}
 
 		public function related_restaurants() {

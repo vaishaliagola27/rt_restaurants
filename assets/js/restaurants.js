@@ -7,8 +7,6 @@
 
 jQuery(document).ready(function () {
 
-<<<<<<< Updated upstream
-=======
 //Slick for slideshow
 	jQuery('.related_restaurants_slide').slick({
 		infinite: true,
@@ -21,7 +19,7 @@ jQuery(document).ready(function () {
 		speed: 500,
 	});
 
->>>>>>> Stashed changes
+
 	//Slick for slideshow
 	jQuery('.image-gallery').slick({
 		dots: true,
