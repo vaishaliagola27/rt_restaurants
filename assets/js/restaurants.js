@@ -7,6 +7,21 @@
 
 jQuery(document).ready(function () {
 
+<<<<<<< Updated upstream
+=======
+//Slick for slideshow
+	jQuery('.related_restaurants_slide').slick({
+		infinite: true,
+		slidesToShow: 3,
+		slidesToScroll: 1,
+		adaptiveHeight: true,
+		arrows:false,
+		dots:true,
+		autoplay: true,
+		speed: 500,
+	});
+
+>>>>>>> Stashed changes
 	//Slick for slideshow
 	jQuery('.image-gallery').slick({
 		dots: true,

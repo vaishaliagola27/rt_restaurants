@@ -157,7 +157,7 @@ if ( !class_exists( 'Admin' ) ) {
 			}
 
 			//fetch value of related restaurants
-			$related_restaurants = isset( $_POST[ 'related_restaurants' ] ) ? $_POST[ 'related_restaurants' ] : '';
+			$related_restaurants = isset( $_POST[ 'related_restaurants_ids' ] ) ? $_POST[ 'related_restaurants_ids' ] : '';
 			if ( empty( $related_restaurants ) ) {
 				return;
 			}

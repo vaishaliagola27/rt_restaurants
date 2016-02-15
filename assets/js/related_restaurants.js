@@ -9,7 +9,8 @@ jQuery(function () {
 
 		for (var i = 0; i < obj[0].length; i++) {
 			var restaurants = {};
-			restaurants['value'] = obj[0][i].value + '-' + obj[0][i].label;
+			restaurants['id'] = obj[0][i].value;
+			restaurants['value'] = obj[0][i].label;
 			restaurants['label'] = obj[0][i].label;
 			arrRestaurants.push(restaurants);
 		}
@@ -40,10 +41,15 @@ jQuery(function () {
 				}
 			,
 			focus: function () {
-				// prevent value inserted on focus
+        
 				return false;
 			},
 			select: function (event, ui) {
+				
+				var values = jQuery("#res_ids").attr('value');
+				
+				jQuery("#res_ids").val(values + ui.item.id + ',');
+				
 				var terms = split(this.value);
 				// remove the current input
 				terms.pop();
@@ -51,7 +57,9 @@ jQuery(function () {
 				terms.push(ui.item.value);
 				// add placeholder to get the comma-and-space at the end
 				terms.push("");
-				this.value = terms.join(",");
+				
+				this.value = terms.join( ", " );
+				
 				return false;
 			}
 
