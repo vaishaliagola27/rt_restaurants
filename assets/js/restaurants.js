@@ -5,10 +5,10 @@
  */
 
 
-jQuery(document).ready(function () {
+jQuery(document).ready(function ($) {
 
 //Slick for slideshow
-	jQuery('.related_restaurants_slide').slick({
+	$('.related_restaurants_slide').slick({
 		infinite: true,
 		slidesToShow: 3,
 		slidesToScroll: 1,
@@ -21,12 +21,13 @@ jQuery(document).ready(function () {
 
 
 	//Slick for slideshow
-	jQuery('.image-gallery').slick({
+	$('.image-gallery').slick({
 		dots: true,
 		infinite: true,
 		speed: 500,
 		fade: true,
 		cssEase: 'linear',
+		arrows:false
 	});
 
 	//Address display by Google Map
