@@ -547,7 +547,7 @@ if ( !class_exists( 'Admin' ) ) {
 			$close_days = array();
 			$i = 0;
 			foreach ( $time as $key => $day ) {
-				if ( $day[ 'am' ] == '' && $day[ 'pm' ] == '' ) {
+				if ( $day[ 0 ] == '' && $day[ 1 ] == '' ) {
 					$close_days[ $i++ ] = ($key);
 				}
 			}
@@ -713,8 +713,30 @@ if ( !class_exists( 'Admin' ) ) {
 			wp_register_script( 'address-map-js', $template_directory_uri . '/assets/js/addressmap_admin.js' );
 			wp_enqueue_script( 'address-map-js' );
 			
-			//
+			//validation
+			wp_register_script( 'validation-js', $template_directory_uri . '/assets/js/admin_validation.js' );
+			wp_enqueue_script( 'validation-js' );
+			
+			//admin css
 			wp_enqueue_style( "restaurants_admin_css", $template_directory_uri . 'assets/css/admin.css' );
+			
+			//timepicker js and css
+			wp_register_script( 'timepicker-js', $template_directory_uri . '/lib/timepicker/jquery.timepicker.js' );
+			wp_enqueue_script( 'timepicker-js' );
+			wp_register_script( 'timepicker-restaurant-js', $template_directory_uri . '/assets/js/restaurant_timing.js' );
+			wp_enqueue_script( 'timepicker-restaurant-js' );
+			
+			//timepicker style
+			wp_enqueue_style( "timepicker_css", $template_directory_uri . '/lib/timepicker/jquery.timepicker.css' );
+			
+			//tooltip style and js
+			wp_register_script( 'tooltip-js', $template_directory_uri . '/lib/tooltipster/js/jquery.tooltipster.min.js' );
+			wp_enqueue_script( 'tooltip-js' );
+			wp_register_script( 'tooltip-admin-js', $template_directory_uri . '/assets/js/admin-timing-tooltip.js' );
+			wp_enqueue_script( 'tooltip-admin-js' );
+			wp_localize_script( 'tooltip-admin-js', 'url', array( 'theme_url' =>  $template_directory_uri  ) );
+			
+			wp_enqueue_style( "tooltip_css", $template_directory_uri . '/lib/tooltipster/css/tooltipster.css' );
 			
 			//Action to add other column scripts
 			do_action( 'rt_restaurants_enqueue_edit_script' );
