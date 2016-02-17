@@ -44,8 +44,18 @@ if ( !class_exists( 'Admin' ) ) {
 			add_action( 'admin_enqueue_scripts', array( $this, 'wp_admin_enqueue_scripts' ) );
 
 			//call for related restaurants
-			add_action( 'wp_ajax_related_restaurants', array($this,'related_restaurants') );
+			add_action( 'wp_ajax_related_restaurants', array( $this, 'related_restaurants' ) );
+
+			//setting page for advertisement
+			add_action( 'edit_user_profile', array( $this, 'advertisement_setting' ) );
+			add_action( 'show_user_profile', array( $this, 'advertisement_setting' ) );
+
+			//save image of advertisement
+			add_action( 'personal_options_update', array( $this, 'save_advertisement' ) );
+			add_action( 'edit_user_profile_update', array( $this, 'save_advertisement' ) );
+						
 		}
+
 
 		/**
 		 * Adds meta boxes
@@ -696,51 +706,61 @@ if ( !class_exists( 'Admin' ) ) {
 				wp_enqueue_script( 'my_custom_script', plugins_url( 'rt_restaurants/assets/js/admin_edit.js', \rtCamp\WP\rtRestaurants\PATH ), false, null, true );
 			}
 
+			if ( ('post-new.php' === $hook || 'edit.php' === $hook) &&
+				isset( $_GET[ 'post_type' ] ) &&
+				'restaurants' === $_GET[ 'post_type' ] ) {
+				
+				//js for related restaurants
+				wp_register_script( 'related-restaurants-js', $template_directory_uri . '/assets/js/related_restaurants.js' );
+				wp_enqueue_script( 'related-restaurants-js' );
+				wp_localize_script( 'related-restaurants-js', 'auto', array( 'admin_url' => admin_url( 'admin-ajax.php' ) ) );
+
+				//register script for google map
+				wp_register_script( 'google-map', "http://maps.googleapis.com/maps/api/js?sensor=false" );
+				wp_enqueue_script( 'google-map' );
+
+				//address map
+				wp_register_script( 'address-map-js', $template_directory_uri . '/assets/js/addressmap_admin.js' );
+				wp_enqueue_script( 'address-map-js' );
+				
+				//validation
+				wp_register_script( 'validation-js', $template_directory_uri . '/assets/js/admin_validation.js' );
+				wp_enqueue_script( 'validation-js' );
+
+				//timepicker js and css
+				wp_register_script( 'timepicker-js', $template_directory_uri . '/lib/timepicker/jquery.timepicker.js' );
+				wp_enqueue_script( 'timepicker-js' );
+				wp_register_script( 'timepicker-restaurant-js', $template_directory_uri . '/assets/js/restaurant_timing.js' );
+				wp_enqueue_script( 'timepicker-restaurant-js' );
+
+				//timepicker style
+				wp_enqueue_style( "timepicker_css", $template_directory_uri . '/lib/timepicker/jquery.timepicker.css' );
+
+				//tooltip style and js
+				wp_register_script( 'tooltip-js', $template_directory_uri . '/lib/tooltipster/js/jquery.tooltipster.min.js' );
+				wp_enqueue_script( 'tooltip-js' );
+				wp_register_script( 'tooltip-admin-js', $template_directory_uri . '/assets/js/admin-timing-tooltip.js' );
+				wp_enqueue_script( 'tooltip-admin-js' );
+				wp_localize_script( 'tooltip-admin-js', 'url', array( 'theme_url' => $template_directory_uri ) );
+
+				wp_enqueue_style( "tooltip_css", $template_directory_uri . '/lib/tooltipster/css/tooltipster.css' );
+			}
+			if ( 'profile.php' === $hook ) {
+				wp_enqueue_media();
+				//script for image display
+				wp_register_script( 'advertisement-js', $template_directory_uri . 'assets/js/advertisement-admin.js' );
+				wp_enqueue_script( 'advertisement-js' );
+			}
+
 			//jquery ui 
 			wp_register_script( 'jquery-ui', "//code.jquery.com/ui/1.11.4/jquery-ui.js" );
 			wp_enqueue_script( 'jquery-ui' );
-
-			//js for related restaurants
-			wp_register_script( 'related-restaurants-js', $template_directory_uri . '/assets/js/related_restaurants.js' );
-			wp_enqueue_script( 'related-restaurants-js' );
-			wp_localize_script( 'related-restaurants-js', 'auto', array( 'admin_url' => admin_url( 'admin-ajax.php' ) ) );
-			
-			//register script for google map
-			wp_register_script( 'google-map', "http://maps.googleapis.com/maps/api/js?sensor=false" );
-			wp_enqueue_script( 'google-map' );
-			
-			//address map
-			wp_register_script( 'address-map-js', $template_directory_uri . '/assets/js/addressmap_admin.js' );
-			wp_enqueue_script( 'address-map-js' );
-			
-			//validation
-			wp_register_script( 'validation-js', $template_directory_uri . '/assets/js/admin_validation.js' );
-			wp_enqueue_script( 'validation-js' );
-			
+				
 			//admin css
 			wp_enqueue_style( "restaurants_admin_css", $template_directory_uri . 'assets/css/admin.css' );
-			
-			//timepicker js and css
-			wp_register_script( 'timepicker-js', $template_directory_uri . '/lib/timepicker/jquery.timepicker.js' );
-			wp_enqueue_script( 'timepicker-js' );
-			wp_register_script( 'timepicker-restaurant-js', $template_directory_uri . '/assets/js/restaurant_timing.js' );
-			wp_enqueue_script( 'timepicker-restaurant-js' );
-			
-			//timepicker style
-			wp_enqueue_style( "timepicker_css", $template_directory_uri . '/lib/timepicker/jquery.timepicker.css' );
-			
-			//tooltip style and js
-			wp_register_script( 'tooltip-js', $template_directory_uri . '/lib/tooltipster/js/jquery.tooltipster.min.js' );
-			wp_enqueue_script( 'tooltip-js' );
-			wp_register_script( 'tooltip-admin-js', $template_directory_uri . '/assets/js/admin-timing-tooltip.js' );
-			wp_enqueue_script( 'tooltip-admin-js' );
-			wp_localize_script( 'tooltip-admin-js', 'url', array( 'theme_url' =>  $template_directory_uri  ) );
-			
-			wp_enqueue_style( "tooltip_css", $template_directory_uri . '/lib/tooltipster/css/tooltipster.css' );
-			
+				
 			//Action to add other column scripts
 			do_action( 'rt_restaurants_enqueue_edit_script' );
-			
 		}
 
 		public function related_restaurants() {
@@ -758,6 +778,28 @@ if ( !class_exists( 'Admin' ) ) {
 			}
 			echo json_encode( $id_title );
 			wp_die();
+		}
+
+		/**
+		 * Set advertisement section and field
+		 * 
+		 * @param type $user
+		 */
+		public function advertisement_setting( $user ) {
+			//include file for html
+			require \rtCamp\WP\rtRestaurants\PATH . 'includes/views/advertisement-admin.php';
+		}
+
+		/**
+		 * 
+		 * @param type $user_id
+		 */
+		public function save_advertisement( $user_id ) {
+			if ( !current_user_can( 'edit_user', $user_id ) )
+				return false;
+			//update_usermeta( $user_id, '_restaurant_advertisement', $_POST['advertise_image'] );
+			global $wpdb;
+			
 		}
 
 	}
