@@ -30,6 +30,34 @@ if ( !class_exists( 'Load' ) ) {
 
 			//function call for class initialization
 			$this->classes_init();
+			
+			//add comment page to restaurants
+			add_action( 'init', array($this, 'comments_page_added' ));
+			
+			//redirect to review page
+			add_action( 'template_redirect', array($this,'review_redirect' ));
+		}
+
+		/**
+		 * 
+		 */
+		public function comments_page_added(){
+			add_rewrite_endpoint( 'reviews', EP_PERMALINK  );
+		}
+		
+		/**
+		 * 
+		 */
+		public function review_redirect() {
+			global $wp_query;
+
+			// if this is not a request for reviews or a singular object of restaurants then bail
+			if ( !isset( $wp_query->query_vars[ 'reviews' ] ) || !is_singular('restaurants') )
+				return;
+
+			// include custom template for reviews
+			include \rtCamp\WP\rtRestaurants\PATH . 'templates/review-page.php';
+			exit;
 		}
 
 		/**

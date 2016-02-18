@@ -2,7 +2,7 @@
 
 namespace rtCamp\WP\rtRestaurants;
 
-if ( !class_exists( 'Admin' ) ) {
+if ( !class_exists( 'Review' ) ) {
 
 	/**
 	 *  Review and rating
@@ -324,7 +324,7 @@ if ( !class_exists( 'Admin' ) ) {
 		 * @param int $depth
 		 */
 		public static function reviews_html( $review, $args, $depth ) {
-
+			
 			//includes restaurant timing html
 			require \rtCamp\WP\rtRestaurants\PATH . 'templates/template-parts/content-review.php';
 		}
