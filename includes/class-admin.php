@@ -706,9 +706,9 @@ if ( !class_exists( 'Admin' ) ) {
 				wp_enqueue_script( 'my_custom_script', plugins_url( 'rt_restaurants/assets/js/admin_edit.js', \rtCamp\WP\rtRestaurants\PATH ), false, null, true );
 			}
 
-			if ( ('post-new.php' === $hook || 'edit.php' === $hook) &&
-				isset( $_GET[ 'post_type' ] ) &&
-				'restaurants' === $_GET[ 'post_type' ] ) {
+			$screen = get_current_screen();
+			if ( ('post-new.php' === $hook || 'post.php' === $hook) &&
+				$screen->post_type ) {
 				
 				//js for related restaurants
 				wp_register_script( 'related-restaurants-js', $template_directory_uri . '/assets/js/related_restaurants.js' );
@@ -745,6 +745,7 @@ if ( !class_exists( 'Admin' ) ) {
 
 				wp_enqueue_style( "tooltip_css", $template_directory_uri . '/lib/tooltipster/css/tooltipster.css' );
 			}
+			
 			if ( 'profile.php' === $hook ) {
 				wp_enqueue_media();
 				//script for image display

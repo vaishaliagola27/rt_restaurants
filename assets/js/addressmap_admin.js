@@ -115,9 +115,7 @@ jQuery(document).ready(function () {
 					// updateMarkerStatus('Drag ended');
 					geocodePosition(marker.getPosition());
 				});
-				google.maps.event.addListener(marker, 'click', function () {
-					infowindow.open(map, marker);
-				});
+				
 				google.maps.event.trigger(marker, 'click');
 				jQuery('.error_address').html('');
 			}
