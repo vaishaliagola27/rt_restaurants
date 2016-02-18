@@ -19,6 +19,9 @@ if ( !class_exists( 'Load' ) ) {
 			//plugin activation
 			register_activation_hook( \rtCamp\WP\rtRestaurants\PATH . 'rt-restaurants.php', array( $this, 'restaurants_flush_rewrites' ) );
 
+			//plugin activation
+			register_activation_hook( \rtCamp\WP\rtRestaurants\PATH . 'rt-restaurants.php', array( $this, 'create_db_advertisement' ) );
+
 			//action for register post types
 			add_action( 'init', array( $this, 'register_post_type' ) );
 
@@ -30,40 +33,36 @@ if ( !class_exists( 'Load' ) ) {
 		}
 
 		/**
-<<<<<<< Updated upstream
-=======
 		 * 
 		 */
 		public function create_db_advertisement() {
 			global $wpdb;
 			$charset_collate = $wpdb->get_charset_collate();
-			 
+
 			$wpdb->rt_restaurants_advertisements = $wpdb->prefix . 'advertisement_images';
-			
+
 			$sql = "CREATE TABLE $wpdb->rt_restaurants_advertisements (
 				id mediumint(9) NOT NULL AUTO_INCREMENT,
 				time datetime DEFAULT '0000-00-00 00:00:00' NOT NULL,
 				user_id mediumint(9) NOT NULL,
 				image_id mediumint(9) NOT NULL,
+				url varchar(55) DEFAULT '',
 				UNIQUE KEY id (id)
 			) $charset_collate;";
 
 			require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
 			dbDelta( $sql );
 		}
+
 		/**
->>>>>>> Stashed changes
 		 * call init method of classes
 		 */
 		public function classes_init() {
-
 			// create other classes' objects and call init()
 			$class_names = array( 'theme', 'admin', 'review' );
-
 			foreach ( $class_names as $class ) {
 				//capitalize first letter of class name
 				$class_uc = ucfirst( $class );
-
 				//Instanciate class and call init() of every class
 				$class_name = "rtCamp\WP\\rtRestaurants\\" . $class_uc;
 				${$class} = new $class_name();
@@ -112,7 +111,7 @@ if ( !class_exists( 'Load' ) ) {
 			$args = array(
 			    'public' => true,
 			    'taxonomies' => $taxonomy,
-			    'supports' => array( 'title', 'comments', 'editor', 'thumbnail' ),
+			    'supports' => array( 'title', 'author', 'comments', 'editor', 'thumbnail' ),
 			    'label' => 'Restaurants',
 			    'labels' => $labels,
 			    'hierarchical' => false,
@@ -153,7 +152,6 @@ if ( !class_exists( 'Load' ) ) {
 			foreach ( $new_post_types as $key => $args ) {
 				register_post_type( $key, $args );
 			}
-			
 		}
 
 		/**

@@ -5,10 +5,10 @@
  */
 
 
-jQuery(document).ready(function () {
+jQuery(document).ready(function ($) {
 
 //Slick for slideshow
-	jQuery('.related_restaurants_slide').slick({
+	$('.related_restaurants_slide').slick({
 		infinite: true,
 		slidesToShow: 3,
 		slidesToScroll: 1,
@@ -21,19 +21,20 @@ jQuery(document).ready(function () {
 
 
 	//Slick for slideshow
-	jQuery('.image-gallery').slick({
+	$('.image-gallery').slick({
 		dots: true,
 		infinite: true,
 		speed: 500,
 		fade: true,
 		cssEase: 'linear',
+		arrows:false
 	});
 
 	//Address display by Google Map
 	initMap();
 	function initMap() {
 		var map = new google.maps.Map(document.getElementById('map'), {
-			zoom: 8,
+			zoom: 10,
 			center: {lat: -34.397, lng: 150.644}
 		});
 		var geocoder = new google.maps.Geocoder();

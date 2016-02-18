@@ -46,20 +46,20 @@
 
 				if (1 === loop) {
 					if (str.localeCompare(days_key[i]) === 0) {
-						$('input[name="time[' + days_key[i] + '][am]"]', $edit_row).val(val);
+						$('input[name="time[' + days_key[i] + '][0]"]', $edit_row).val(val);
 					} else {
 						//set value of close day
-						$('input[name="time[' + days_key[i] + '][am]"]', $edit_row).val(null);
-						$('input[name="time[' + days_key[i] + '][pm]"]', $edit_row).val(null);
+						$('input[name="time[' + days_key[i] + '][0]"]', $edit_row).val(null);
+						$('input[name="time[' + days_key[i] + '][1]"]', $edit_row).val(null);
 
 						i++;
-						$('input[name="time[' + days_key[i] + '][am]"]', $edit_row).val(val);
+						$('input[name="time[' + days_key[i] + '][0]"]', $edit_row).val(val);
 					}
 
 				}
 				if (2 === loop)
 				{
-					$('input[name="time[' + days_key[i] + '][pm]"]', $edit_row).val(val);
+					$('input[name="time[' + days_key[i] + '][1]"]', $edit_row).val(val);
 				}
 				//check for loop
 				if (2 === loop) {
@@ -70,8 +70,8 @@
 			});
 			//if sunday is close day
 			if (6 === i) {
-				$('input[name="time[sun][am]"]', $edit_row).val(null);
-				$('input[name="time[sun][pm]"]', $edit_row).val(null);
+				$('input[name="time[sun][0]"]', $edit_row).val(null);
+				$('input[name="time[sun][1]"]', $edit_row).val(null);
 			}
 		}
 	};
