@@ -738,6 +738,58 @@ if ( !class_exists( 'Admin' ) ) {
 			wp_die();
 		}
 
+<<<<<<< Updated upstream
+=======
+		/**
+		 * Set advertisement section and field
+		 * 
+		 * @param type $user
+		 */
+		public function advertisement_setting( $user ) {
+			//include file for html
+			require \rtCamp\WP\rtRestaurants\PATH . 'includes/views/advertisement-admin.php';
+		}
+
+		/**
+		 * 
+		 * @param type $user_id
+		 */
+		public function save_advertisement( $user_id ) {
+			if ( !current_user_can( 'edit_user', $user_id ) )
+				return false;
+			//update_usermeta( $user_id, '_restaurant_advertisement', $_POST['advertise_image'] );
+			if ( empty( $user_id ) ) {
+				$user_id = $_POST[ 'user_id' ];
+			}
+
+			if ( empty( $user_id ) ) {
+				return;
+			}
+
+			//verify nonce
+			$image_nonce = !empty( $_POST[ '_wpnonce' ] ) ? $_POST[ '_wpnonce' ] : '';
+
+			if ( empty( $image_nonce ) ) {
+				return;
+			}
+
+//			if ( !wp_verify_nonce( $_POST[ '_wpnonce' ] ) ) {
+//				return;
+//			}
+			
+			global $wpdb;
+			$table_name = $wpdb->prefix . 'advertisement_images';
+			
+			$wpdb->insert(
+				$table_name, array(
+				'time' => current_time( 'mysql' ),
+				'user_id' => $_POST['user_id'],
+				'image_id'=> $_POST['custom-img-id'],
+				)
+			);
+		}
+
+>>>>>>> Stashed changes
 	}
 
 }

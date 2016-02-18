@@ -41,24 +41,25 @@ if ( !class_exists( 'Theme' ) ) {
 			// Enqueuing styles
 			wp_enqueue_style( "restaurants_css", $template_directory_uri . 'assets/css/restaurant.css' );
 			wp_enqueue_style( "grid_css", $template_directory_uri . 'assets/css/grid-layout.css' );
-			wp_enqueue_style( "Slick_css", $template_directory_uri . 'lib/slick/slick/slick.css' );
-			wp_enqueue_style( "Slick_theme_css", $template_directory_uri . 'lib/slick/slick/slick-theme.css' );
-			
-			
-			// Registering slick script
-			wp_register_script( 'slick-js1', $template_directory_uri . 'lib/slick/slick/slick.min.js' );
-			wp_enqueue_script( 'slick-js1' );
+			if ( is_singular( 'restaurants' ) ) {
 
-			//register script for google map
-			wp_register_script( 'google-map', "http://maps.googleapis.com/maps/api/js?sensor=false" );
-			wp_enqueue_script( 'google-map' );
+				wp_enqueue_style( "Slick_css", $template_directory_uri . 'lib/slick/slick/slick.css' );
+				wp_enqueue_style( "Slick_theme_css", $template_directory_uri . 'lib/slick/slick/slick-theme.css' );
 
-			// Registering restaurant js
-			wp_register_script( 'slider-js', $template_directory_uri . '/assets/js/restaurants.js' );
-			wp_enqueue_script( 'slider-js' );
-			
+
+				// Registering slick script
+				wp_register_script( 'slick-js1', $template_directory_uri . 'lib/slick/slick/slick.min.js' );
+				wp_enqueue_script( 'slick-js1' );
+
+				//register script for google map
+				wp_register_script( 'google-map', "http://maps.googleapis.com/maps/api/js?sensor=false" );
+				wp_enqueue_script( 'google-map' );
+
+				// Registering restaurant js
+				wp_register_script( 'slider-js', $template_directory_uri . '/assets/js/restaurants.js' );
+				wp_enqueue_script( 'slider-js' );
+			}
 		}
-		
 
 		/**
 		 * loads template for single restaurant page
@@ -114,7 +115,7 @@ if ( !class_exists( 'Theme' ) ) {
 				$path_template = \rtCamp\WP\rtRestaurants\PATH . 'templates/' . $type . '-restaurants.php';
 				$template = $path_template;
 			}
-			
+
 			/**
 			 * Filter to change template path
 			 *
@@ -123,8 +124,8 @@ if ( !class_exists( 'Theme' ) ) {
 			 * @param string $var    Filter name
 			 * @param array $template
 			 */
-			$template = apply_filters('rt_restaurants_template_path',$template);
-			
+			$template = apply_filters( 'rt_restaurants_template_path', $template );
+
 			return $template;
 		}
 

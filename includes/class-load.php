@@ -30,6 +30,29 @@ if ( !class_exists( 'Load' ) ) {
 		}
 
 		/**
+<<<<<<< Updated upstream
+=======
+		 * 
+		 */
+		public function create_db_advertisement() {
+			global $wpdb;
+			$charset_collate = $wpdb->get_charset_collate();
+			 
+			$wpdb->rt_restaurants_advertisements = $wpdb->prefix . 'advertisement_images';
+			
+			$sql = "CREATE TABLE $wpdb->rt_restaurants_advertisements (
+				id mediumint(9) NOT NULL AUTO_INCREMENT,
+				time datetime DEFAULT '0000-00-00 00:00:00' NOT NULL,
+				user_id mediumint(9) NOT NULL,
+				image_id mediumint(9) NOT NULL,
+				UNIQUE KEY id (id)
+			) $charset_collate;";
+
+			require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
+			dbDelta( $sql );
+		}
+		/**
+>>>>>>> Stashed changes
 		 * call init method of classes
 		 */
 		public function classes_init() {
