@@ -738,8 +738,6 @@ if ( !class_exists( 'Admin' ) ) {
 			wp_die();
 		}
 
-<<<<<<< Updated upstream
-=======
 		/**
 		 * Set advertisement section and field
 		 * 
@@ -789,7 +787,6 @@ if ( !class_exists( 'Admin' ) ) {
 			);
 		}
 
->>>>>>> Stashed changes
 	}
 
 }
