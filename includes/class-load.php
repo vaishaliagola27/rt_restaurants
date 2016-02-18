@@ -56,7 +56,7 @@ if ( !class_exists( 'Load' ) ) {
 				return;
 
 			// include custom template for reviews
-			include \rtCamp\WP\rtRestaurants\PATH . 'templates/review-page.php';
+			comments_template();
 			exit;
 		}
 
