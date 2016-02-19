@@ -9,5 +9,21 @@ and open the template in the editor.
 */
 
 #map{
-	height: 300px;
+	height: 250px;
+	width: 100%;
+}
+
+/*tooltip text*/
+.tooltiptext{
+	color: #7C92A9;
+	display: inline;
+	font-size: 0.8rem;
+}
+
+/*tooltip text for hover*/
+.info-timing{
+	color:#E22F2A;
+	display: inline;
+	font-weight: bold;
+	font-size: 0.9rem;
 }

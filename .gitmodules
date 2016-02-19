@@ -1,3 +1,9 @@
 [submodule "lib/slick"]
 	path = lib/slick
 	url = git@github.com:kenwheeler/slick.git
+[submodule "lib/timepicker"]
+	path = lib/timepicker
+	url = git@github.com:wvega/timepicker.git
+[submodule "lib/tooltipster"]
+	path = lib/tooltipster
+	url = git@github.com:iamceege/tooltipster.git

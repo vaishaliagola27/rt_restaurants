@@ -3,7 +3,7 @@ jQuery(document).ready(function () {
 	var geocoder;
 	var map;
 	var marker;
-	var infowindow = new google.maps.InfoWindow({size: new google.maps.Size(150, 50)});
+	
 	function initialize() {
 		geocoder = new google.maps.Geocoder();
 		var latlng = new google.maps.LatLng(-34.397, 150.644);
@@ -13,9 +13,7 @@ jQuery(document).ready(function () {
 			mapTypeId: google.maps.MapTypeId.ROADMAP
 		}
 		map = new google.maps.Map(document.getElementById('map'), mapOptions);
-		google.maps.event.addListener(map, 'click', function () {
-			infowindow.close();
-		});
+		
 		codeAddress(geocoder, map);
 	}
 
@@ -38,8 +36,7 @@ jQuery(document).ready(function () {
 			} else {
 				marker.formatted_address = 'Cannot determine address at this location.';
 			}
-			infowindow.setContent(marker.formatted_address + "<br>coordinates: " + marker.getPosition().toUrlValue(6));
-			infowindow.open(map, marker);
+			
 			var address = ["streetAddress", "addressLocality", "addressRegion", "postalCode", "addressCountry"];
 			console.log(responses);
 			
@@ -108,8 +105,6 @@ jQuery(document).ready(function () {
 				map.setCenter(results[0].geometry.location);
 				if (marker) {
 					marker.setMap(null);
-					if (infowindow)
-						infowindow.close();
 				}
 				marker = new google.maps.Marker({
 					map: map,
@@ -120,17 +115,23 @@ jQuery(document).ready(function () {
 					// updateMarkerStatus('Drag ended');
 					geocodePosition(marker.getPosition());
 				});
-				google.maps.event.addListener(marker, 'click', function () {
-					if (marker.formatted_address) {
-						infowindow.setContent(marker.formatted_address + "<br>coordinates: " + marker.getPosition().toUrlValue(6));
-					} else {
-						infowindow.setContent(address + "<br>coordinates: " + marker.getPosition().toUrlValue(6));
-					}
-					infowindow.open(map, marker);
-				});
+				
 				google.maps.event.trigger(marker, 'click');
-			} else {
-				alert('Geocode was not successful for the following reason: ' + status);
+				jQuery('.error_address').html('');
+			}
+			else if(status === 'ZERO_RESULTS'){
+				jQuery('.error_address').html('');
+				marker = new google.maps.Marker({
+					map: map,
+					draggable: true,
+					position: {lat: 18.539043, lng: 73.903484}
+				});
+				map.setCenter({lat: 18.539043, lng: 73.903484});
+			}
+			else {
+				console.log(status);
+				jQuery('.error_address').html('Geocode was not successful for the following reason: ' + status);
+				jQuery('.error_address').css('color', 'red');
 			}
 		});
 	}

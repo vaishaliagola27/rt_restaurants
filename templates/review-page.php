@@ -1,15 +1,12 @@
 <?php
-global $wp_query;
-
-if ( post_password_required() ) {
-	return;
-}
+global $post;
+get_header();
 ?>
 
 <div id="comments" class="comments-area">
-
 	<?php
-	if ( have_comments() ) :
+	
+	if ( get_comment_count() ) :
 		?>
 		<h2 class="comments-title">
 			<?php
@@ -64,7 +61,10 @@ if ( post_password_required() ) {
 		<?php
 	endif;
 
-	comment_form();
 	?>
 
 </div><!-- #comments -->
+
+<?php
+get_footer();
+?>

@@ -8,6 +8,15 @@
 	?>
 
 	<table style="font-size: 12px;margin:auto">
+		<!-- tooltip for close day preview -->
+		<tr>
+			<td colspan="3">
+				<div class="tooltiptext">
+					For close day of restaurant, leave time blank.
+				</div>
+				<span class="info-timing">help?</span>
+			</td>
+		</tr>
 		<tr style="text-align: center;font-size: 12px; font-weight: bold">
 			<td>Day</td>
 			<td>From</td>
@@ -19,22 +28,26 @@
 
 		$days = array("mon" => "Monday", "tue" => "Tuesday", "wed" => "Wednesday", "thu" => "Thursday", "fri" => "Friday", "sat" => "Saturday", "sun" => "Sunday");
 		foreach ($days as $key => $day) {
-			$am = $pm = NULL;
+			$open = $close = NULL;
 
 			// Check if time is not already set for restaurant
 			if (!empty($time) && is_array($time)) {
-				if ($time[$key]['am'] != NULL) {
-					$am = $time[$key]['am'];
+				if ($time[$key][0] != NULL) {
+					$open = $time[$key][0];
 				}
-				if ($time[$key]['am'] != NULL) {
-					$pm = $time[$key]['pm'];
+				if ($time[$key][1] != NULL) {
+					$close = $time[$key][1];
 				}
 			}
 			?>
 			<tr>
 				<td name=" <?php echo $day ?> "> <?php echo $day ?> </td>
-				<td><input type="text" name="<?php echo "time[" . $key . "][am]"; ?>" size="3" value="<?php echo $am; ?>">AM</td>
-				<td><input type="text" name="<?php echo "time[" . $key . "][pm]"; ?>" size="3" value="<?php echo $pm; ?>">PM</td>
+				<td>
+					<input type="text" name="<?php echo "time[" . $key . "][0]"; ?>" size="5" value="<?php echo $open; ?>" class="timepicker">
+				</td>
+				<td>
+					<input type="text" name="<?php echo "time[" . $key . "][1]"; ?>" size="5" value="<?php echo $close; ?>" class="timepicker">
+				</td>
 			</tr>
 			<?php
 		}

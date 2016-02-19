@@ -163,12 +163,12 @@ and open the template in the editor.
 
 /* review area css */
 #comments{
-	margin-left:10%;
+	/*margin-left:10%;*/
 }
 
 .comments-area {
-	width: 130%;
-	margin:0 10% 0 10%;
+	width: 100%;
+	display: block;
 	background-color: rgba(43,198,212,0.1);
 	border: solid #125F67 1px;
 }
