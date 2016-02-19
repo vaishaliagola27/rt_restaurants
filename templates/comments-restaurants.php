@@ -1,5 +1,11 @@
 <?php
 global $wp_query;
+$path= $_SERVER['REQUEST_URI'];
+$path_array = explode("/", $path);
+$page_name = $path_array[sizeof($path_array)-2];
+if($page_name === "reviews"){
+	get_header();
+}
 
 if ( post_password_required() ) {
 	return;
@@ -63,8 +69,13 @@ if ( post_password_required() ) {
 		<p class="no-comments"><?php esc_html_e( 'Comments are closed.', '_s' ); ?></p>
 		<?php
 	endif;
-
-	comment_form();
+	if($page_name != "reviews"){
+		comment_form();
+	}
 	?>
 
 </div><!-- #comments -->
+<?php
+if($page_name === "reviews"){
+	get_footer();
+}
